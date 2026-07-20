@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* ===========================
+   TerraSquad Design Tokens
+=========================== */
+
+:root {
+
+  /* Colors */
+  --color-primary: #2F5D50;
+  --color-primary-dark: #23463B;
+  --color-accent: #C89B3C;
+
+  --color-bg: #FFFFFF;
+  --color-bg-soft: #F8F7F3;
+
+  --color-text: #111827;
+  --color-text-light: #6B7280;
+
+  /* Radius */
+  --radius-card: 24px;
+  --radius-button: 999px;
+
+  /* Shadows */
+  --shadow-card: 0 20px 60px rgba(0,0,0,.08);
+  --shadow-hover: 0 30px 80px rgba(0,0,0,.15);
+
+  /* Layout */
+  --container-width: 1280px;
+
+}
+
+body{
+  background:var(--color-bg);
+  color:var(--color-text);
+  font-family:var(--font-geist-sans);
+}
+
+html{
+  scroll-behavior:smooth;
+}
