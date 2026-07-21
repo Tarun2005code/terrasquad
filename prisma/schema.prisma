@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Expedition {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  location    String
+  duration    String
+  difficulty  String
+  price       Int
+  image       String
+  description String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings    Booking[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings  Booking[]
+}
+
+model Booking {
+  id Int @id @default(autoincrement())
+
+  expeditionId Int
+  expedition Expedition @relation(fields: [expeditionId], references: [id])
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  expeditionDate DateTime
+  participants   Int
+  totalAmount    Int
+
+  paymentStatus String @default("Pending")
+
+  createdAt DateTime @default(now())
+}

@@ -1,20 +1,25 @@
 import Image from "next/image";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
 
 type ExpeditionCardProps = {
+  slug: string;
   title: string;
   location: string;
   duration: string;
   difficulty: string;
   image: string;
+  price: number;
 };
 
 export default function ExpeditionCard({
+  slug,
   title,
   location,
   duration,
   difficulty,
   image,
+  price,
 }: ExpeditionCardProps) {
   return (
     <div className="group overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
@@ -60,16 +65,19 @@ export default function ExpeditionCard({
           <div className="text-right">
             <p className="text-sm">Starting From</p>
             <p className="text-xl font-bold text-[#2F5D50]">
-              ₹999
+              ₹{price}
             </p>
           </div>
 
         </div>
 
+        {/* Button */}
         <div className="mt-8">
-          <Button className="w-full">
-            Book Now
-          </Button>
+          <Link href={`/expeditions/${slug}`}>
+            <Button className="w-full">
+              Book Now
+            </Button>
+          </Link>
         </div>
 
       </div>
