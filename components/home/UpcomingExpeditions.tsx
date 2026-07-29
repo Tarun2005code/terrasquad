@@ -1,78 +1,110 @@
+import Link from "next/link";
 import Button from "@/components/ui/Button";
+import { prisma } from "@/lib/prisma";
 
-const trips = [
-  {
-    date: "2 Aug",
-    title: "Patna Waterfall Expedition",
-    seats: "8 Seats Left",
-    price: "₹999",
-  },
-  {
-    date: "9 Aug",
-    title: "Neer Waterfall Expedition",
-    seats: "12 Seats Left",
-    price: "₹1099",
-  },
-  {
-    date: "16 Aug",
-    title: "Kyari Viewpoint Trek",
-    seats: "6 Seats Left",
-    price: "₹1299",
-  },
-];
+export default async function UpcomingExpeditions() {
+  const trips = await prisma.expeditionDate.findMany({
+    include: {
+      expedition: true,
+    },
+    orderBy: {
+      date: "asc",
+    },
+    take: 3,
+  });
 
-export default function UpcomingExpeditions() {
   return (
-    <section className="py-28 bg-[#2F5D50] text-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section
+      id="expeditions"
+      className="relative overflow-hidden py-28"
+    >
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#16221d] via-[#111111] to-[#0f1714]" />
 
+      {/* Glow Effects */}
+      <div className="absolute top-10 right-10 h-96 w-96 rounded-full bg-[#718F44]/10 blur-[140px]" />
+
+      <div className="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[#2F5D50]/20 blur-[120px]" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center">
           <p className="uppercase tracking-[8px] text-[#C89B3C] font-semibold">
             Upcoming
           </p>
 
-          <h2 className="mt-4 text-5xl md:text-6xl font-black">
+          <h2 className="mt-4 text-5xl md:text-6xl font-black text-white">
             Next Expeditions
           </h2>
+
+          <p className="mt-5 text-gray-300 max-w-2xl mx-auto">
+            Reserve your spot before seats fill up and
+            join fellow explorers on unforgettable adventures.
+          </p>
         </div>
 
-        <div className="mt-16 space-y-6">
+        <div className="mt-20 space-y-8">
+          {trips.map((trip) => {
+            const seatsLeft =
+              trip.seats - trip.bookedSeats;
 
-          {trips.map((trip) => (
-            <div
-              key={trip.title}
-              className="bg-white/10 backdrop-blur rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-white/15 transition"
-            >
+            return (
+              <div
+                key={trip.id}
+                className="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 transition-all duration-500 hover:border-[#C89B3C]/40 hover:bg-white/10 hover:-translate-y-1"
+              >
+                <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
 
-              <div>
-                <p className="text-[#C89B3C] font-semibold">
-                  {trip.date}
-                </p>
+                  {/* Left */}
+                  <div>
+                    <div className="inline-flex rounded-full border border-[#C89B3C]/30 bg-[#C89B3C]/10 px-4 py-2 text-sm font-semibold text-[#C89B3C]">
+                      {new Date(trip.date).toLocaleDateString(
+                        "en-IN",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        }
+                      )}
+                    </div>
 
-                <h3 className="text-3xl font-bold mt-2">
-                  {trip.title}
-                </h3>
+                    <h3 className="mt-4 text-3xl font-bold text-white">
+                      {trip.expedition.title}
+                    </h3>
 
-                <p className="text-gray-300 mt-2">
-                  {trip.seats}
-                </p>
+                    <p className="mt-2 text-gray-300">
+                      📍 {trip.expedition.location}
+                    </p>
+
+                    <p className="mt-3 text-sm font-medium text-green-400">
+                      {seatsLeft} Seats Left
+                    </p>
+                  </div>
+
+                  {/* Center */}
+                  <div className="text-center">
+                    <p className="text-sm uppercase tracking-widest text-gray-400">
+                      Starting From
+                    </p>
+
+                    <p className="mt-2 text-5xl font-black text-[#C89B3C]">
+                      ₹{trip.expedition.price}
+                    </p>
+                  </div>
+
+                  {/* Right */}
+                  <Link
+                    href={`/expeditions/${trip.expedition.slug}`}
+                  >
+                    <Button>
+                      Reserve Seat
+                    </Button>
+                  </Link>
+
+                </div>
               </div>
-
-              <div className="text-center">
-                <p className="text-4xl font-black">
-                  {trip.price}
-                </p>
-              </div>
-
-              <Button>
-                Reserve Seat
-              </Button>
-
-            </div>
-          ))}
-
+            );
+          })}
         </div>
-
       </div>
     </section>
   );

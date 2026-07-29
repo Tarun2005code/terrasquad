@@ -1,11 +1,13 @@
-type ButtonProps = {
-  children: React.ReactNode;
-  className?: string;
+import { ButtonHTMLAttributes, ReactNode } from "react";
+
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: ReactNode;
 };
 
 export default function Button({
   children,
   className = "",
+  ...props
 }: ButtonProps) {
   return (
     <button
@@ -20,8 +22,11 @@ export default function Button({
         transition
         duration-300
         shadow-lg
+        disabled:opacity-50
+        disabled:cursor-not-allowed
         ${className}
       `}
+      {...props}
     >
       {children}
     </button>

@@ -1,15 +1,16 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Expedition {
-  id          Int      @id @default(autoincrement())
-  slug        String   @unique
+  id          Int               @id @default(autoincrement())
+  slug        String            @unique
   title       String
   location    String
   duration    String
@@ -17,39 +18,230 @@ model Expedition {
   price       Int
   image       String
   description String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  altitude    String?
+  distance    String?
+  guide       Boolean           @default(true)
+  meals       String?
+  pickup      String?
+  rating      Float             @default(4.9)
+  featured    Boolean           @default(false)
   bookings    Booking[]
+  dates       ExpeditionDate[]
+  images      ExpeditionImage[]
+  itinerary   ItineraryDay[]
+  reviews     Review[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id                      Int           @id @default(autoincrement())
+  name                    String
+  email                   String        @unique
+  phone                   String?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+  password                String
+  role                    UserRole      @default(USER)
+  resetToken              String?
+  resetTokenExpiry        DateTime?
+  verificationToken       String?
+  verificationTokenExpiry DateTime?
+  emailVerified           Boolean       @default(false)
+  accounts                Account[]
+  bookings                Booking[]
+  couponUsage             CouponUsage[]
+  reviews                 Review[]
+  sessions                Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
   name      String
-  email     String   @unique
+  email     String
   phone     String?
-
+  subject   String?
+  message   String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+}
 
-  bookings  Booking[]
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Booking {
-  id Int @id @default(autoincrement())
+  id                    Int            @id @default(autoincrement())
+  bookingReference      String?        @unique
+  expeditionId          Int
+  expeditionDateId      Int
+  userId                Int
+  expeditionDate        DateTime
+  participants          Int
+  totalAmount           Int
+  checkedIn             Boolean        @default(false)
+  checkedInAt           DateTime?
+  paymentStatus         PaymentStatus  @default(PENDING)
+  razorpayOrderId       String?        @unique
+  razorpayPaymentId     String?
+  razorpaySignature     String?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  adminNotes            String?
+  cancellationReason    String?
+  cancelledAt           DateTime?
+  couponCode            String?
+  couponId              Int?
+  discountAmount        Int            @default(0)
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  expiresAt             DateTime?
+  finalAmount           Int
+  status                BookingStatus  @default(PENDING)
+  coupon                Coupon?        @relation(fields: [couponId], references: [id])
+  expeditionDateRef     ExpeditionDate @relation(fields: [expeditionDateId], references: [id])
+  expedition            Expedition     @relation(fields: [expeditionId], references: [id])
+  user                  User           @relation(fields: [userId], references: [id])
+  events                BookingEvent[]
+  couponUsage           CouponUsage[]
+  review                Review?
+}
 
+model ItineraryDay {
+  id           Int        @id @default(autoincrement())
+  day          Int
+  title        String
+  description  String
   expeditionId Int
-  expedition Expedition @relation(fields: [expeditionId], references: [id])
+  expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
+}
 
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+model ExpeditionImage {
+  id           Int        @id @default(autoincrement())
+  image        String
+  expeditionId Int
+  expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
+}
 
-  expeditionDate DateTime
-  participants   Int
-  totalAmount    Int
+model ExpeditionDate {
+  id           Int        @id @default(autoincrement())
+  date         DateTime
+  seats        Int
+  bookedSeats  Int        @default(0)
+  expeditionId Int
+  featured     Boolean    @default(false)
+  Booking      Booking[]
+  expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
+}
 
-  paymentStatus String @default("Pending")
+model Review {
+  id           Int        @id @default(autoincrement())
+  rating       Int
+  title        String?
+  comment      String
+  createdAt    DateTime   @default(now())
+  expeditionId Int
+  userId       Int
+  bookingId    Int        @unique
+  approved     Boolean    @default(false)
+  updatedAt    DateTime   @updatedAt
+  booking      Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
+model Coupon {
+  id          Int           @id @default(autoincrement())
+  code        String        @unique
+  description String?
+  type        CouponType
+  value       Int
+  minAmount   Int           @default(0)
+  maxDiscount Int?
+  usageLimit  Int?
+  usedCount   Int           @default(0)
+  active      Boolean       @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  bookings    Booking[]
+  usage       CouponUsage[]
+}
+
+model CouponUsage {
+  id        Int      @id @default(autoincrement())
+  couponId  Int
+  userId    Int
+  bookingId Int?
+  usedAt    DateTime @default(now())
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([couponId, userId])
+}
+
+model BookingEvent {
+  id        Int      @id @default(autoincrement())
+  bookingId Int
+  action    String
   createdAt DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  CHECKED_IN
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  TRIP_LEADER
+  SUPER_ADMIN
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
 }

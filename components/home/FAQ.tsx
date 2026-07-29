@@ -31,9 +31,16 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="bg-[#F8F7F3] py-28">
-      <div className="max-w-5xl mx-auto px-6">
+    <section className="relative overflow-hidden py-28">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0f1714] via-[#131d18] to-[#111111]" />
 
+      {/* Glow Effects */}
+      <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-[#718F44]/10 blur-[140px]" />
+
+      <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-[#2F5D50]/20 blur-[140px]" />
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6">
         <SectionHeading
           eyebrow="FAQ"
           title="Frequently Asked Questions"
@@ -41,39 +48,46 @@ export default function FAQ() {
         />
 
         <div className="mt-16 space-y-5">
-
           {faqs.map((faq, index) => (
             <div
               key={faq.question}
-              className="rounded-2xl bg-white shadow-md"
+              className="
+                rounded-3xl
+                border
+                border-white/10
+                bg-white/5
+                backdrop-blur-md
+                overflow-hidden
+                transition-all
+                duration-300
+                hover:border-[#C89B3C]/30
+              "
             >
               <button
                 onClick={() =>
                   setOpen(open === index ? null : index)
                 }
-                className="w-full flex justify-between items-center p-6 text-left"
+                className="flex w-full items-center justify-between p-6 text-left"
               >
-                <span className="font-semibold text-lg">
+                <span className="text-lg font-semibold text-white">
                   {faq.question}
                 </span>
 
                 <ChevronDown
-                  className={`transition ${
+                  className={`text-[#C89B3C] transition-transform duration-300 ${
                     open === index ? "rotate-180" : ""
                   }`}
                 />
               </button>
 
               {open === index && (
-                <div className="px-6 pb-6 text-gray-600 leading-7">
+                <div className="px-6 pb-6 text-gray-300 leading-8">
                   {faq.answer}
                 </div>
               )}
             </div>
           ))}
-
         </div>
-
       </div>
     </section>
   );
