@@ -4,6 +4,7 @@ type Booking = {
   id: number;
   bookingReference: string | null;
   totalAmount: number;
+  finalAmount: number;
   paymentStatus: string;
   createdAt: Date;
   user: {

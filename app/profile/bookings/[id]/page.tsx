@@ -85,7 +85,7 @@ export default async function BookingDetailPage({
               booking.expeditionDate.toISOString(),
             participants:
               booking.participants,
-            totalAmount:
+            finalAmount:
               booking.finalAmount,
           }}
         />

@@ -51,7 +51,7 @@ export default async function BookingDetailsPage({
               "en-GB"
             ),
             participants: booking.participants,
-            totalAmount: booking.finalAmount,
+            finalAmount: booking.finalAmount,
           }}
         />
       </div>
