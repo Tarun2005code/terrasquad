@@ -3,18 +3,19 @@ import Image from "next/image";
 
 import { getCurrentUser } from "@/lib/auth/session";
 import LogoutButton from "@/components/auth/LogoutButton";
+import MobileMenu from "@/components/layout/MobileMenu";
 
 export default async function Navbar() {
   const user = await getCurrentUser();
 
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-black/90 backdrop-blur-lg">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6">
 
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3"
+          className="flex items-center gap-2 sm:gap-3"
         >
           <Image
             src="/images/q-logo.png"
@@ -22,51 +23,47 @@ export default async function Navbar() {
             width={50}
             height={50}
             priority
+            className="h-10 w-10 sm:h-12 sm:w-12"
           />
 
-          <span className="text-3xl font-extrabold tracking-tight">
-            <span className="text-white">
-              Terra
-            </span>
-
-            <span className="text-[#718F44]">
-              Squad
-            </span>
+          <span className="text-xl font-extrabold tracking-tight sm:text-2xl lg:text-3xl">
+            <span className="text-white">Terra</span>
+            <span className="text-[#718F44]">Squad</span>
           </span>
         </Link>
 
-        {/* Navigation */}
+        {/* Desktop Navigation */}
         <div className="hidden items-center gap-8 text-[15px] font-medium text-gray-300 md:flex">
           <Link
-            href="#home"
+            href="/"
             className="transition duration-300 hover:text-white"
           >
             Home
           </Link>
 
           <Link
-  href="/#featured-expeditions"
-  className="hover:text-white transition duration-300"
->
-  Featured Expeditions
-</Link>
+            href="/#featured-expeditions"
+            className="transition duration-300 hover:text-white"
+          >
+            Featured Expeditions
+          </Link>
 
           <Link
-            href="#destinations"
+            href="/#destinations"
             className="transition duration-300 hover:text-white"
           >
             Destinations
           </Link>
 
           <Link
-            href="#gallery"
+            href="/#gallery"
             className="transition duration-300 hover:text-white"
           >
             Gallery
           </Link>
 
           <Link
-            href="#about"
+            href="/#about"
             className="transition duration-300 hover:text-white"
           >
             About
@@ -98,8 +95,8 @@ export default async function Navbar() {
           )}
         </div>
 
-        {/* Auth Area */}
-        <div className="flex items-center gap-3">
+        {/* Desktop Auth */}
+        <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
               <Link
@@ -128,6 +125,11 @@ export default async function Navbar() {
               </Link>
             </>
           )}
+        </div>
+
+        {/* Mobile Menu */}
+        <div className="md:hidden">
+          <MobileMenu user={user} />
         </div>
 
       </div>
