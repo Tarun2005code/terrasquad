@@ -100,7 +100,11 @@ export async function POST(req: NextRequest) {
         key: process.env.RAZORPAY_KEY_ID,
       });
     }
-
+console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
+console.log(
+  "KEY SECRET EXISTS:",
+  !!process.env.RAZORPAY_KEY_SECRET
+);
     // Create Razorpay Order
     const order = await razorpay.orders.create({
       amount: booking.finalAmount * 100,
