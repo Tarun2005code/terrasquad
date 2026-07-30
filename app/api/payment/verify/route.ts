@@ -99,16 +99,16 @@ export async function POST(req: NextRequest) {
     // Store payment details if not already stored.
     if (!booking.razorpayPaymentId) {
       await prisma.booking.update({
-        where: {
-          id: booking.id,
-        },
-        data: {
-          razorpayPaymentId:
-            razorpay_payment_id,
-          razorpaySignature:
-            razorpay_signature,
-        },
-      });
+  where: {
+    id: booking.id,
+  },
+  data: {
+    razorpayPaymentId: razorpay_payment_id,
+    razorpaySignature: razorpay_signature,
+    paymentStatus: "PAID",
+    status: "CONFIRMED",
+  },
+});
     }
 
     return NextResponse.json({

@@ -37,24 +37,26 @@ export default function RazorpayButton({
       description: "Expedition Booking",
 
       handler: async (response: any) => {
-        const verify = await fetch(
-          "/api/payment/verify",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(response),
-          }
-        );
-
-        if (verify.ok) {
-          alert("Payment Successful!");
-          location.reload();
-        } else {
-          alert("Payment Verification Failed");
-        }
+  const verify = await fetch(
+    "/api/payment/verify",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(response),
+    }
+  );
+
+  const verifyData = await verify.json();
+
+  if (verify.ok && verifyData.success) {
+    window.location.href =
+      `/booking/success?booking=${verifyData.bookingReference}`;
+  } else {
+    alert("Payment Verification Failed");
+  }
+},
 
       theme: {
         color: "#000000",
