@@ -22,7 +22,7 @@ async function main() {
       email: "admin@terrasquad.in",
       password: adminPassword,
       role: UserRole.ADMIN,
-      phone: "9999999999",
+      phone: "9713024303",
     },
   });
 

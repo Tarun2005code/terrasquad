@@ -44,10 +44,10 @@ export default function MobileMenu({
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 z-[100] h-screen w-[85%] max-w-sm bg-[#050505] border-l border-white/10 shadow-2xl transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
+  className={`fixed top-0 right-0 z-[100] h-screen w-[85%] max-w-sm bg-[#050505] border-l border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${
+    open ? "translate-x-0" : "translate-x-full"
+  }`}
+>
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-6">
           <h2 className="text-2xl font-black">
