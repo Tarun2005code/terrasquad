@@ -410,12 +410,12 @@ const [user, setUser] = useState<any>(null);
 
 
         {/* Coupon */}
-        <div className="mt-8">
+        <div className="mt-8 mb-6">
           <label className="text-sm font-semibold">
             Coupon
           </label>
 
-          <div className="mt-3 flex items-center gap-3">
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row">
             <input
               type="text"
               disabled={loading || couponApplied}
@@ -433,7 +433,7 @@ const [user, setUser] = useState<any>(null);
 
             <Button
               type="button"
-              className="whitespace-nowrap px-6"
+              className="w-full sm:w-auto whitespace-nowrap px-6"
               disabled={
                 loading ||
                 couponLoading ||
@@ -449,9 +449,20 @@ const [user, setUser] = useState<any>(null);
             </Button>
           </div>
         </div>
-
+<div className="mt-8 mb-10">
+  <Button
+    type="button"
+    className="w-full min-h-[60px] text-lg font-bold"
+    onClick={handleBooking}
+    disabled={loading || selectedDate === null}
+  >
+    {loading
+      ? "Opening Payment Gateway..."
+      : `Pay ₹${finalAmount}`}
+  </Button>
+</div>
         {/* Booking Summary */}
-        <div className="mt-8 border-t pt-6">
+        <div className="mt-12 border-t pt-8">
 
           <h3 className="mb-4 text-lg font-bold">
             Booking Summary
@@ -537,26 +548,12 @@ const [user, setUser] = useState<any>(null);
       </div>
 
       {/* Trust Badges */}
-      <div className="mt-6 space-y-2 text-sm text-gray-600">
+      <div className="mt-6 mb-10 space-y-2 text-sm text-gray-600">
         <p>✓ Instant Confirmation</p>
         <p>✓ Secure Razorpay Payments</p>
         <p>✓ Professional Guides</p>
         <p>✓ 24/7 Support</p>
       </div>
-
-      <Button
-        type="button"
-        className="mt-8 w-full"
-        onClick={handleBooking}
-        disabled={
-  loading ||
-  selectedDate === null
-}
-      >
-        {loading
-  ? "Opening Payment Gateway..."
-  : `Pay ₹${finalAmount}`}
-      </Button>
 
       <div className="mt-4 text-center text-sm text-gray-500">
         ✓ Secure Razorpay Payment
