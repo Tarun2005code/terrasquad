@@ -138,20 +138,23 @@ export default function MobileMenu({
           {/* Auth */}
           <div className="mt-4 flex flex-col gap-3">
 
-            {user ? (
-  <>
+     {user ? (
+  <div className="flex gap-3">
     <Link
       href="/account"
       onClick={closeMenu}
-      className="rounded-2xl border border-white/20 py-4 text-center font-semibold text-white transition hover:bg-white/10"
+      className="flex-1 rounded-2xl border border-white/20 py-4 text-center font-semibold text-white transition hover:bg-white/10"
     >
       Account
     </Link>
 
-    <div onClick={closeMenu}>
+    <div
+      className="flex-1"
+      onClick={closeMenu}
+    >
       <LogoutButton />
     </div>
-  </>
+  </div>
 ) : (
               <>
                 <Link

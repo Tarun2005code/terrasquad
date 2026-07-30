@@ -39,83 +39,114 @@ export default function CheckInPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl p-8">
-      <h1 className="mb-8 text-4xl font-bold">
+    <div className="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8">
+
+      <h1 className="mb-2 text-center text-3xl font-bold md:text-4xl">
         QR Check-In
       </h1>
+
+      <p className="mb-6 text-center text-sm text-gray-500 md:text-base">
+        Scan participant ticket QR code
+      </p>
 
       <QRScanner onDetected={verify} />
 
       {message && (
-        <div className="mt-6 rounded-xl bg-green-100 p-4 text-green-700">
+        <div className="mt-5 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
           {message}
         </div>
       )}
 
       {error && (
-        <div className="mt-6 rounded-xl bg-red-100 p-4 text-red-700">
+        <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
           {error}
         </div>
       )}
 
       {booking && (
-        <div className="mt-8 rounded-2xl border bg-white p-8 shadow">
-          <h2 className="mb-6 text-2xl font-bold">
+        <div className="mt-6 rounded-2xl border bg-white p-5 shadow md:p-8">
+          <h2 className="mb-5 text-xl font-bold md:text-2xl">
             Booking Verified
           </h2>
 
-          <div className="space-y-3">
-            <p>
-              <strong>Name:</strong> {booking.user.name}
-            </p>
+          <div className="grid gap-4 sm:grid-cols-2">
 
-            <p>
-              <strong>Email:</strong> {booking.user.email}
-            </p>
+            <Info
+              label="Name"
+              value={booking.user.name}
+            />
 
-            <p>
-              <strong>Phone:</strong> {booking.user.phone || "-"}
-            </p>
+            <Info
+              label="Email"
+              value={booking.user.email}
+            />
 
-            <p>
-              <strong>Expedition:</strong> {booking.expedition.title}
-            </p>
+            <Info
+              label="Phone"
+              value={booking.user.phone || "-"}
+            />
 
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(
+            <Info
+              label="Participants"
+              value={booking.participants}
+            />
+
+            <Info
+              label="Expedition"
+              value={booking.expedition.title}
+            />
+
+            <Info
+              label="Booking Ref"
+              value={booking.bookingReference}
+            />
+
+            <Info
+              label="Date"
+              value={new Date(
                 booking.expeditionDate
               ).toLocaleDateString("en-GB")}
-            </p>
+            />
 
-            <p>
-              <strong>Participants:</strong>{" "}
-              {booking.participants}
-            </p>
+            <Info
+              label="Check-In Time"
+              value={
+                booking.checkedInAt
+                  ? new Date(
+                      booking.checkedInAt
+                    ).toLocaleString("en-GB")
+                  : "-"
+              }
+            />
+          </div>
 
-            <p>
-              <strong>Booking Reference:</strong>{" "}
-              {booking.bookingReference}
-            </p>
-
-            <p>
-              <strong>Checked In:</strong>{" "}
-              <span className="font-semibold text-green-600">
-                Yes
-              </span>
-            </p>
-
-            <p>
-              <strong>Check-In Time:</strong>{" "}
-              {booking.checkedInAt
-                ? new Date(
-                    booking.checkedInAt
-                  ).toLocaleString("en-GB")
-                : "-"}
-            </p>
+          <div className="mt-5 rounded-xl bg-green-50 p-4 text-center">
+            <span className="font-bold text-green-700">
+              ✓ Participant Checked In
+            </span>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function Info({
+  label,
+  value,
+}: {
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border p-4">
+      <p className="text-xs uppercase tracking-wide text-gray-500">
+        {label}
+      </p>
+
+      <p className="mt-1 font-semibold break-words">
+        {value}
+      </p>
     </div>
   );
 }

@@ -13,40 +13,46 @@ export default function QRScanner({
   const scanned = useRef(false);
 
   return (
-    <div className="rounded-2xl overflow-hidden border bg-white shadow">
-      <Scanner
-        constraints={{
-          facingMode: "environment",
-        }}
-        onScan={(codes) => {
-          if (!codes.length || scanned.current) return;
+    <div className="overflow-hidden rounded-2xl border bg-white shadow">
 
-          scanned.current = true;
+      <div className="h-[350px] md:h-[500px]">
+        <Scanner
+          constraints={{
+            facingMode: "environment",
+          }}
+          onScan={(codes) => {
+            if (!codes.length || scanned.current) return;
 
-          try {
-            const raw = codes[0].rawValue;
+            scanned.current = true;
 
-            const qr = JSON.parse(raw);
+            try {
+              const raw = codes[0].rawValue;
 
-            if (qr.bookingReference) {
-              onDetected(qr.bookingReference);
-            } else {
-              onDetected(raw);
+              const qr = JSON.parse(raw);
+
+              if (qr.bookingReference) {
+                onDetected(qr.bookingReference);
+              } else {
+                onDetected(raw);
+              }
+            } catch {
+              onDetected(codes[0].rawValue);
             }
-          } catch {
-            // If QR contains plain booking reference instead of JSON
-            onDetected(codes[0].rawValue);
-          }
 
-          // Prevent continuous scanning
-          setTimeout(() => {
-            scanned.current = false;
-          }, 2000);
-        }}
-        onError={(error) => {
-          console.error(error);
-        }}
-      />
+            setTimeout(() => {
+              scanned.current = false;
+            }, 2000);
+          }}
+          onError={(error) => {
+            console.error(error);
+          }}
+        />
+      </div>
+
+      <div className="border-t bg-gray-50 p-4 text-center text-sm text-gray-600">
+        Point camera at ticket QR code
+      </div>
+
     </div>
   );
 }
