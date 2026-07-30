@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SuccessDownloadTicketButton from "@/components/booking/SuccessDownloadTicketButton";
 import BookingActions from "@/components/booking/BookingActions";
 type Props = {
   searchParams: Promise<{
@@ -157,11 +158,32 @@ export default async function BookingSuccessPage({
           )}
 
         </div>
-<BookingActions
-  bookingId={bookingData.id}
-  bookingReference={bookingData.bookingReference}
-  status={bookingData.status}
-/>
+<div className="mt-12 flex flex-wrap gap-4">
+
+  <SuccessDownloadTicketButton
+    booking={{
+      bookingReference: bookingData.bookingReference,
+      user: {
+        name: bookingData.user.name,
+      },
+      expedition: {
+        title: bookingData.expedition.title,
+      },
+      expeditionDate: new Date(
+        bookingData.expeditionDate
+      ).toLocaleDateString("en-GB"),
+      participants: bookingData.participants,
+      finalAmount: bookingData.finalAmount,
+    }}
+  />
+
+  <BookingActions
+    bookingId={bookingData.id}
+    bookingReference={bookingData.bookingReference}
+    status={bookingData.status}
+  />
+
+</div>
 
         <div className="mt-10 rounded-3xl border border-green-200 bg-green-50 p-8">
           <h2 className="text-2xl font-bold text-[#2F5D50]">

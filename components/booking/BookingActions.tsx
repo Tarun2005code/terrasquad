@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
   bookingId: number;
@@ -18,6 +18,14 @@ export default function BookingActions({
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    console.log("BookingActions Debug:", {
+      bookingId,
+      bookingReference,
+      status,
+    });
+  }, [bookingId, bookingReference, status]);
 
   async function cancelBooking() {
     const ok = confirm(
@@ -59,13 +67,10 @@ export default function BookingActions({
 
   return (
     <div className="mt-12 flex flex-wrap gap-4">
-      <a
-        href={`/api/bookings/reference/${bookingReference}/ticket`}
-        className="rounded-xl bg-[#2F5D50] px-6 py-3 font-semibold text-white transition hover:opacity-90"
-      >
-        Download Ticket
-      </a>
 
+
+
+      {/* Cancel Booking */}
       {status !== "CANCELLED" && (
         <button
           onClick={cancelBooking}
@@ -76,6 +81,7 @@ export default function BookingActions({
         </button>
       )}
 
+      {/* Book Another */}
       <Link
         href="/expeditions"
         className="rounded-xl border px-6 py-3 font-semibold"
@@ -83,12 +89,14 @@ export default function BookingActions({
         Book Another Expedition
       </Link>
 
+      {/* Home */}
       <Link
         href="/"
         className="rounded-xl border px-6 py-3 font-semibold"
       >
         Go Home
       </Link>
+
     </div>
   );
 }
