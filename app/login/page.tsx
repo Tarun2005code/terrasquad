@@ -120,7 +120,14 @@ export default function LoginPage() {
             Forgot Password?
           </Link>
         </div>
-
+<div className="mt-2 text-right">
+  <Link
+    href="/resend-verification"
+    className="text-sm text-[#2F5D50] hover:underline"
+  >
+    Resend verification mail
+  </Link>
+</div>
         <button
           type="submit"
           disabled={loading}

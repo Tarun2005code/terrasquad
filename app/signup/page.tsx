@@ -59,11 +59,13 @@ export default function SignupPage() {
       }
 
       toast.success(
-        "Account created"
+        "Account created successfully. Please check your email and verify your account before logging in."
       );
 
-      router.push("/");
-      router.refresh();
+      setTimeout(() => {
+        router.push("/login");
+        router.refresh();
+      }, 2000);
     } catch {
       toast.error(
         "Signup failed"
@@ -82,6 +84,11 @@ export default function SignupPage() {
         <h1 className="text-4xl font-black text-center">
           Create Account
         </h1>
+
+        <p className="mt-3 text-center text-sm text-gray-600">
+          After signup, you'll need to verify
+          your email before logging in.
+        </p>
 
         <input
           type="text"
@@ -156,6 +163,11 @@ export default function SignupPage() {
             ? "Creating..."
             : "Create Account"}
         </button>
+
+        <p className="mt-4 text-center text-xs text-gray-500">
+          Check your Inbox and Spam folder for
+          the verification email.
+        </p>
       </form>
     </div>
   );
