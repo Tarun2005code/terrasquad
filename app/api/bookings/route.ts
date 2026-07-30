@@ -136,28 +136,28 @@ if (expeditionDate.date < new Date()) {
         }
       );
     }
-const existingBooking =
-  await prisma.booking.findFirst({
-    where: {
-      userId: user.id,
-      expeditionDateId: dateId,
-      paymentStatus: {
-        in: ["PENDING", "PAID"],
-      },
-    },
-  });
+// const existingBooking =
+//   await prisma.booking.findFirst({
+//     where: {
+//       userId: user.id,
+//       expeditionDateId: dateId,
+//       paymentStatus: {
+//         in: ["PENDING", "PAID"],
+//       },
+//     },
+//   });
 
-if (existingBooking) {
-  return NextResponse.json(
-    {
-      error:
-        "You already have a booking for this expedition.",
-    },
-    {
-      status: 409,
-    }
-  );
-}
+// if (existingBooking) {
+//   return NextResponse.json(
+//     {
+//       error:
+//         "You already have a booking for this expedition.",
+//     },
+//     {
+//       status: 409,
+//     }
+//   );
+// }
     // ----------------------------------------
     // Pricing
     // ----------------------------------------
