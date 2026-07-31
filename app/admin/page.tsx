@@ -71,7 +71,7 @@ export default async function AdminPage() {
         </Link>
 
         <Link
-          href="/admin/checkin"
+          href="/admin/check-in"
           className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
         >
           <h2 className="text-xl font-bold">

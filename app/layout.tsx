@@ -4,8 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Script from "next/script";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/layout/Footer";
+import LayoutWrapper from "@/components/layout/LayoutWrapper";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,9 +24,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html
       lang="en"
@@ -35,13 +34,14 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-black">
-        <Navbar />
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
 
-        <main>{children}</main>
-
-        <Footer />
-
-        <Toaster richColors position="top-right" />
+        <Toaster
+          richColors
+          position="top-right"
+        />
 
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
