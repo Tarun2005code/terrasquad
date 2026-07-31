@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
-import { updateCoupon } from "@/app/admin/coupons/actions";
+import { updateCoupon } from "@/app/admin/(protected)/coupons/actions";
 
 type Props = {
   params: Promise<{
