@@ -66,6 +66,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Prevent duplicate processing
+    if (booking.paymentStatus === "PAID") {
+      return NextResponse.json({
+        success: true,
+        bookingReference: booking.bookingReference,
+      });
+    }
+
     if (
       booking.status === "CANCELLED" ||
       booking.paymentStatus === "CANCELLED"
@@ -96,20 +104,59 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Store payment details if not already stored.
-    if (!booking.razorpayPaymentId) {
-      await prisma.booking.update({
-  where: {
-    id: booking.id,
-  },
-  data: {
-    razorpayPaymentId: razorpay_payment_id,
-    razorpaySignature: razorpay_signature,
-    paymentStatus: "PAID",
-    status: "CONFIRMED",
-  },
-});
-    }
+    await prisma.$transaction(async (tx) => {
+      const expeditionDate =
+        await tx.expeditionDate.findUnique({
+          where: {
+            id: booking.expeditionDateId,
+          },
+        });
+
+      if (!expeditionDate) {
+        throw new Error(
+          "Expedition date not found."
+        );
+      }
+
+      const availableSeats =
+        expeditionDate.seats -
+        expeditionDate.bookedSeats;
+
+      if (
+        availableSeats <
+        booking.participants
+      ) {
+        throw new Error(
+          "No seats available."
+        );
+      }
+
+      await tx.booking.update({
+        where: {
+          id: booking.id,
+        },
+        data: {
+          razorpayPaymentId:
+            razorpay_payment_id,
+          razorpaySignature:
+            razorpay_signature,
+          paymentStatus: "PAID",
+          status: "CONFIRMED",
+        },
+      });
+
+      await tx.expeditionDate.update({
+        where: {
+          id: booking.expeditionDateId,
+        },
+        data: {
+          bookedSeats: {
+            increment:
+              booking.participants,
+          },
+        },
+      });
+    });
 
     return NextResponse.json({
       success: true,
@@ -125,7 +172,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Payment verification failed.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Payment verification failed.",
       },
       {
         status: 500,

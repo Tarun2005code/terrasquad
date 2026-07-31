@@ -4,7 +4,10 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Script from "next/script";
 
-import LayoutWrapper from "@/components/layout/LayoutWrapper";
+export const metadata: Metadata = {
+  title: "TerraSquad",
+  description: "Explore Beyond",
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -16,11 +19,6 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
   variable: "--font-heading",
 });
-
-export const metadata: Metadata = {
-  title: "TerraSquad",
-  description: "Explore Beyond",
-};
 
 export default function RootLayout({
   children,
@@ -34,14 +32,9 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-black">
-        <LayoutWrapper>
-          {children}
-        </LayoutWrapper>
+        {children}
 
-        <Toaster
-          richColors
-          position="top-right"
-        />
+        <Toaster richColors position="top-right" />
 
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
