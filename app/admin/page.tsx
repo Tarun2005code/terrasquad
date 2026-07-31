@@ -5,24 +5,30 @@ import DashboardCharts from "@/components/admin/DashboardCharts";
 import CleanupBookingsButton from "@/components/admin/CleanupBookingsButton";
 import { getDashboardData } from "@/lib/admin/dashboard";
 
-
-
 export default async function AdminPage() {
   const dashboard = await getDashboardData();
 
   return (
-    <div className="space-y-10 p-8">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
       {/* Header */}
 
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-2xl font-bold sm:text-3xl lg:text-4xl">
             Admin Dashboard
           </h1>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-sm text-gray-500 sm:text-base">
             Manage expeditions, bookings and customers.
           </p>
+          <div className="mt-4">
+  <Link
+    href="/"
+    className="rounded-lg bg-gray-600 px-5 py-3 text-white hover:bg-gray-700"
+  >
+    ← Back to Website
+  </Link>
+</div>
         </div>
 
         <CleanupBookingsButton />
@@ -30,89 +36,89 @@ export default async function AdminPage() {
 
       {/* Quick Actions */}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <Link
+          href="/admin/expeditions/new"
+          className="rounded-2xl border bg-green-600 p-4 text-white shadow transition hover:shadow-lg"
+        >
+          <h2 className="text-base font-bold sm:text-lg">
+            + Add Expedition
+          </h2>
+
+          <p className="mt-1 text-xs text-green-100 sm:text-sm">
+            Create a new expedition
+          </p>
+        </Link>
+
         <Link
           href="/admin/expeditions"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
+          className="rounded-2xl border bg-white p-4 shadow transition hover:shadow-lg"
         >
-          <h2 className="text-xl font-bold">
+          <h2 className="text-base font-bold sm:text-lg">
             Expeditions
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:text-sm">
             Manage expeditions
           </p>
         </Link>
 
-        <Link
-          href="/admin/dates"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
-        >
-          <h2 className="text-xl font-bold">
-            Dates
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Departure dates
-          </p>
-        </Link>
+        
 
         <Link
           href="/admin/bookings"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
+          className="rounded-2xl border bg-white p-4 shadow transition hover:shadow-lg"
         >
-          <h2 className="text-xl font-bold">
+          <h2 className="text-base font-bold sm:text-lg">
             Bookings
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:text-sm">
             View all bookings
           </p>
         </Link>
 
         <Link
           href="/admin/check-in"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
+          className="rounded-2xl border bg-white p-4 shadow transition hover:shadow-lg"
         >
-          <h2 className="text-xl font-bold">
+          <h2 className="text-base font-bold sm:text-lg">
             QR Check-In
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:text-sm">
             Scan customer tickets
           </p>
         </Link>
+<Link
+  href="/admin/coupons"
+  className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
+>
+  <h2 className="text-xl font-bold">
+    Coupons
+  </h2>
 
+  <p className="mt-2 text-sm text-gray-500">
+    Total Coupons: {dashboard.couponCount}
+  </p>
+</Link>
         <Link
-          href="/admin/reviews"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
-        >
-          <h2 className="text-xl font-bold">
-            Reviews
-          </h2>
+  href="/admin/reviews"
+  className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
+>
+  <h2 className="text-xl font-bold">
+    Reviews
+  </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
-            Moderate reviews
-          </p>
-        </Link>
-
-        <Link
-          href="/admin/coupons"
-          className="rounded-2xl border bg-white p-6 shadow transition hover:shadow-lg"
-        >
-          <h2 className="text-xl font-bold">
-            Coupons
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Manage discount coupons
-          </p>
-        </Link>
+  <p className="mt-2 text-sm text-gray-500">
+    Manage customer reviews
+  </p>
+</Link>
       </div>
 
       {/* Statistics */}
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard
           title="Revenue"
           value={`₹${dashboard.revenue}`}
@@ -158,15 +164,19 @@ export default async function AdminPage() {
 
       {/* Charts */}
 
-      <DashboardCharts
-        data={dashboard.chartData}
-      />
+      <div className="overflow-x-auto rounded-2xl bg-white p-2 shadow">
+        <DashboardCharts
+          data={dashboard.chartData}
+        />
+      </div>
 
       {/* Recent Bookings */}
 
-      <RecentBookings
-        bookings={dashboard.recentBookings}
-      />
+      <div className="overflow-x-auto">
+        <RecentBookings
+          bookings={dashboard.recentBookings}
+        />
+      </div>
     </div>
   );
 }

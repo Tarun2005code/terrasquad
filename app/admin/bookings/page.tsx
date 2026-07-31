@@ -47,20 +47,112 @@ export default async function AdminBookingsPage({
   });
 
   return (
-    <div className="mx-auto max-w-7xl p-8">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-4xl font-bold">
-          All Bookings
-        </h1>
+    <div className="mx-auto max-w-7xl p-4 md:p-8">
 
-        <ExportBookingsButton
-          bookings={bookings}
-        />
-      </div>
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <div>
+    <h1 className="text-4xl font-bold">
+      All Bookings
+    </h1>
+  </div>
+
+  <div className="flex flex-col gap-3 sm:flex-row">
+    <Link
+      href="/admin"
+      className="rounded-lg bg-gray-600 px-5 py-3 text-center text-white transition hover:bg-gray-700"
+    >
+      ← Back to Dashboard
+    </Link>
+
+    <ExportBookingsButton
+      bookings={bookings}
+    />
+  </div>
+</div>
 
       <BookingFilters />
 
-      <div className="overflow-x-auto rounded-2xl border bg-white shadow">
+      {/* MOBILE CARDS */}
+      <div className="mt-6 space-y-4 md:hidden">
+        {bookings.length === 0 ? (
+          <div className="rounded-xl border bg-white p-6 text-center text-gray-500 shadow">
+            No bookings found.
+          </div>
+        ) : (
+          bookings.map((booking) => (
+            <div
+              key={booking.id}
+              className="rounded-xl border bg-white p-4 shadow"
+            >
+              <div className="mb-3 flex items-start justify-between">
+                <div>
+                  <p className="text-xs text-gray-500">
+                    Reference
+                  </p>
+
+                  <p className="font-mono text-sm font-semibold">
+                    {booking.bookingReference}
+                  </p>
+                </div>
+
+                <PaymentStatusBadge
+                  status={booking.paymentStatus}
+                />
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <p>
+                  <span className="font-semibold">
+                    Customer:
+                  </span>{" "}
+                  {booking.user.name}
+                </p>
+
+                <p>
+                  <span className="font-semibold">
+                    Expedition:
+                  </span>{" "}
+                  {booking.expedition.title}
+                </p>
+
+                <p>
+                  <span className="font-semibold">
+                    Participants:
+                  </span>{" "}
+                  {booking.participants}
+                </p>
+
+                <p>
+                  <span className="font-semibold">
+                    Amount:
+                  </span>{" "}
+                  ₹{booking.finalAmount}
+                </p>
+
+                <p>
+                  <span className="font-semibold">
+                    Check-In:
+                  </span>{" "}
+                  {booking.checkedIn
+                    ? "✅ Checked In"
+                    : "❌ Not Checked In"}
+                </p>
+              </div>
+
+              <Link
+                href={`/admin/bookings/${booking.id}`}
+                className="mt-4 block rounded-lg bg-blue-600 py-2 text-center text-white hover:bg-blue-700"
+              >
+                View Booking
+              </Link>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* DESKTOP TABLE */}
+      <div className="mt-6 hidden overflow-x-auto rounded-2xl border bg-white shadow md:block">
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
@@ -139,7 +231,7 @@ export default async function AdminBookingsPage({
                 <td className="p-4">
                   <Link
                     href={`/admin/bookings/${booking.id}`}
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+                    className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
                   >
                     View
                   </Link>

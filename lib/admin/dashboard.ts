@@ -10,9 +10,9 @@ export async function getDashboardData() {
     expeditions,
     paid,
     recentBookings,
+    couponCount,
   ] = await Promise.all([
     prisma.booking.count(),
-
     prisma.booking.count({
       where: {
         paymentStatus: "PAID",
@@ -59,6 +59,7 @@ export async function getDashboardData() {
       },
       take: 10,
     }),
+    prisma.coupon.count(),
   ]);
 
   let revenue = 0;
@@ -97,6 +98,7 @@ export async function getDashboardData() {
     revenue,
     seats,
     bookedSeats,
+     couponCount,
     occupancy:
       seats === 0
         ? 0

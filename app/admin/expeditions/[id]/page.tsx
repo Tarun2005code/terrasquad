@@ -62,12 +62,7 @@ export default async function EditExpeditionPage({
           🖼 Gallery
         </Link>
 
-        <Link
-          href={`/admin/expeditions/${expedition.id}/reviews`}
-          className="rounded-lg bg-orange-600 px-6 py-3 text-white transition hover:bg-orange-700"
-        >
-          ⭐ Reviews
-        </Link>
+        
 
         <Link
           href="/admin/expeditions"

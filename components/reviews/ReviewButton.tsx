@@ -36,7 +36,7 @@ export default function ReviewButton({
       }
 
       alert(
-        "Review submitted successfully. Waiting for admin approval."
+        "Thanks for sharing your experience with TerraSquad!"
       );
 
       setOpen(false);

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import LogoutButton from "@/components/auth/LogoutButton";
+
 type UserType = {
   role?: string;
 } | null;
@@ -44,10 +45,10 @@ export default function MobileMenu({
 
       {/* Drawer */}
       <div
-  className={`fixed top-0 right-0 z-[100] h-screen w-[85%] max-w-sm bg-[#050505] border-l border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${
-    open ? "translate-x-0" : "translate-x-full"
-  }`}
->
+        className={`fixed top-0 right-0 z-[100] h-screen w-[85%] max-w-sm bg-[#050505] border-l border-white/10 shadow-2xl transition-transform duration-300 flex flex-col ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 px-6 py-6">
           <h2 className="text-2xl font-black">
@@ -66,96 +67,126 @@ export default function MobileMenu({
 
         {/* Links */}
         <div className="flex flex-col gap-3 p-6 overflow-y-auto">
+          {user?.role === "ADMIN" ? (
+            <>
+              <Link
+                href="/admin"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Dashboard
+              </Link>
 
-          <Link
-            href="/"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            Home
-          </Link>
+              <Link
+                href="/admin/expeditions"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Manage Expeditions
+              </Link>
 
-          <Link
-            href="/#featured-expeditions"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            Featured Expeditions
-          </Link>
+              <Link
+                href="/admin/bookings"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Bookings
+              </Link>
 
-          <Link
-            href="/#destinations"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            Destinations
-          </Link>
+              <Link
+                href="/admin/check-in"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                QR Check-In
+              </Link>
 
-          <Link
-            href="/#gallery"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            Gallery
-          </Link>
+              
 
-          <Link
-            href="/#about"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            About
-          </Link>
+              
+            </>
+          ) : (
+            <>
+              <Link
+                href="/"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Home
+              </Link>
 
-          <Link
-            href="/contact"
-            onClick={closeMenu}
-            className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-          >
-            Contact
-          </Link>
+              <Link
+                href="/#featured-expeditions"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Featured Expeditions
+              </Link>
 
-          {user && (
-            <Link
-              href="/my-bookings"
-              onClick={closeMenu}
-              className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-            >
-              My Bookings
-            </Link>
-          )}
+              <Link
+                href="/#destinations"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Destinations
+              </Link>
 
-          {user?.role === "ADMIN" && (
-            <Link
-              href="/admin/check-in"
-              onClick={closeMenu}
-              className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium transition hover:bg-[#1a1a1a]"
-            >
-              QR Check-In
-            </Link>
+              <Link
+                href="/#gallery"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Gallery
+              </Link>
+
+              <Link
+                href="/#about"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                About
+              </Link>
+
+              <Link
+                href="/contact"
+                onClick={closeMenu}
+                className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+              >
+                Contact
+              </Link>
+
+              {user && (
+                <Link
+                  href="/my-bookings"
+                  onClick={closeMenu}
+                  className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
+                >
+                  My Bookings
+                </Link>
+              )}
+            </>
           )}
 
           {/* Auth */}
           <div className="mt-4 flex flex-col gap-3">
+            {user ? (
+              <div className="flex gap-3">
+                <Link
+                  href="/account"
+                  onClick={closeMenu}
+                  className="flex-1 rounded-2xl border border-white/20 py-4 text-center font-semibold text-white transition hover:bg-white/10"
+                >
+                  Account
+                </Link>
 
-     {user ? (
-  <div className="flex gap-3">
-    <Link
-      href="/account"
-      onClick={closeMenu}
-      className="flex-1 rounded-2xl border border-white/20 py-4 text-center font-semibold text-white transition hover:bg-white/10"
-    >
-      Account
-    </Link>
-
-    <div
-      className="flex-1"
-      onClick={closeMenu}
-    >
-      <LogoutButton />
-    </div>
-  </div>
-) : (
+                <div
+                  className="flex-1"
+                  onClick={closeMenu}
+                >
+                  <LogoutButton />
+                </div>
+              </div>
+            ) : (
               <>
                 <Link
                   href="/login"
@@ -174,7 +205,6 @@ export default function MobileMenu({
                 </Link>
               </>
             )}
-
           </div>
         </div>
       </div>
