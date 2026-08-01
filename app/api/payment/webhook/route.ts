@@ -1,8 +1,7 @@
-import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendBookingConfirmation } from "@/lib/email/sendBookingConfirmation";
-
+import { createHmac } from "crypto";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.text();
@@ -26,8 +25,7 @@ export async function POST(req: NextRequest) {
     const secret =
       process.env.RAZORPAY_WEBHOOK_SECRET!;
 
-    const expectedSignature = crypto
-      .createHmac("sha256", secret)
+    const expectedSignature = createHmac("sha256", secret)
       .update(body)
       .digest("hex");
 

@@ -108,7 +108,19 @@ export default async function AdminBookingsPage({
                   </span>{" "}
                   {booking.user.name}
                 </p>
+<p>
+  <span className="font-semibold">
+    Email:
+  </span>{" "}
+  {booking.user.email}
+</p>
 
+<p>
+  <span className="font-semibold">
+    Phone:
+  </span>{" "}
+  {booking.user.phone ?? "-"}
+</p>
                 <p>
                   <span className="font-semibold">
                     Expedition:

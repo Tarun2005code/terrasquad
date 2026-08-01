@@ -35,42 +35,24 @@ model Expedition {
 }
 
 model User {
-  id                      Int           @id @default(autoincrement())
-  name                    String
-  email                   String        @unique
-  phone                   String?
-  createdAt               DateTime      @default(now())
-  updatedAt               DateTime      @updatedAt
-  password                String
-  role                    UserRole      @default(USER)
-  resetToken              String?
-  resetTokenExpiry        DateTime?
-  verificationToken       String?
-  verificationTokenExpiry DateTime?
-  emailVerified           Boolean       @default(false)
-  accounts                Account[]
-  bookings                Booking[]
-  couponUsage             CouponUsage[]
-  reviews                 Review[]
-  sessions                Session[]
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            Int
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
+  id               Int           @id @default(autoincrement())
+  name             String
+  email            String        @unique
+  phone            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  password         String
+  role             UserRole      @default(USER)
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  emailVerified    Boolean       @default(false)
+  emailOtp         String?
+  emailOtpExpiry   DateTime?
+  phoneOtp         String?
+  phoneOtpExpiry   DateTime?
+  bookings         Booking[]
+  couponUsage      CouponUsage[]
+  reviews          Review[]
 }
 
 model ContactMessage {
@@ -81,22 +63,6 @@ model ContactMessage {
   subject   String?
   message   String
   createdAt DateTime @default(now())
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       Int
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }
 
 model Booking {

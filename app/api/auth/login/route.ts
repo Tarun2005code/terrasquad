@@ -10,13 +10,24 @@ export async function POST(req: Request) {
 
     const { email, password } = body;
 
-    const user = await prisma.user.findUnique({
-      where: {
-        email: email.toLowerCase(),
-      },
-    });
-console.log("USER FOUND:", user);
-console.log("EMAIL VERIFIED:", user?.emailVerified);
+    if (!email || !password) {
+      return NextResponse.json(
+        {
+          error: "Email and password are required",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const user =
+      await prisma.user.findUnique({
+        where: {
+          email: email.toLowerCase(),
+        },
+      });
+
     if (!user) {
       return NextResponse.json(
         {
@@ -28,10 +39,11 @@ console.log("EMAIL VERIFIED:", user?.emailVerified);
       );
     }
 
-    const valid = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const valid =
+      await bcrypt.compare(
+        password,
+        user.password
+      );
 
     if (!valid) {
       return NextResponse.json(
@@ -44,10 +56,7 @@ console.log("EMAIL VERIFIED:", user?.emailVerified);
       );
     }
 
-    // ----------------------------------------
-    // Email Verification Check
-    // ----------------------------------------
-
+    // Email verification required
     if (!user.emailVerified) {
       return NextResponse.json(
         {
@@ -55,21 +64,18 @@ console.log("EMAIL VERIFIED:", user?.emailVerified);
             "Please verify your email before logging in.",
         },
         {
-          status: 401,
+          status: 403,
         }
       );
     }
-
-    // ----------------------------------------
-    // Create JWT
-    // ----------------------------------------
 
     const token = signUserToken({
       id: user.id,
       email: user.email,
     });
 
-    const cookieStore = await cookies();
+    const cookieStore =
+      await cookies();
 
     cookieStore.set(
       "user_token",
@@ -77,18 +83,25 @@ console.log("EMAIL VERIFIED:", user?.emailVerified);
       {
         httpOnly: true,
         secure:
-          process.env.NODE_ENV === "production",
+          process.env.NODE_ENV ===
+          "production",
         sameSite: "lax",
         path: "/",
-        maxAge: 60 * 60 * 24 * 30,
+        maxAge:
+          60 * 60 * 24 * 30,
       }
     );
 
     return NextResponse.json({
       success: true,
+      message:
+        "Login successful",
     });
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error(
+      "Login Error:",
+      error
+    );
 
     return NextResponse.json(
       {

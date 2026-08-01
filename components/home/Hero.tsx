@@ -98,19 +98,50 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
 
           <Link
-            href="/expeditions"
-            className="bg-[#2F5D50] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:scale-105 transition text-center"
-          >
-            Join Expedition
-          </Link>
+  href="/expeditions"
+  className="
+    bg-[#2F5D50]
+    text-white
+    px-6 sm:px-8
+    py-3 sm:py-4
+    rounded-full
+    font-semibold
+    text-center
+    transition-all
+    duration-200
+    hover:scale-105
+    active:scale-95
+    active:bg-[#23463B]
+    touch-manipulation
+  "
+>
+  Join Expedition
+</Link>
 
-          <Link
-            href="/#featured-expeditions"
-            scroll
-            className="border border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-white hover:text-black transition text-center"
-          >
-            View Expeditions
-          </Link>
+<Link
+  href="/#featured-expeditions"
+  scroll
+  className="
+    border
+    border-white
+    text-white
+    px-6 sm:px-8
+    py-3 sm:py-4
+    rounded-full
+    font-semibold
+    text-center
+    transition-all
+    duration-200
+    hover:bg-white
+    hover:text-black
+    active:scale-95
+    active:bg-white
+    active:text-black
+    touch-manipulation
+  "
+>
+  View Expeditions
+</Link>
 
         </div>
 

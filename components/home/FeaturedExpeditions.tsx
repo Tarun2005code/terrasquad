@@ -58,7 +58,8 @@ export default async function FeaturedExpeditions() {
           {expeditions.map((trip) => (
             <div
               key={trip.id}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:-translate-y-2
+active:scale-[0.98]hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
             >
               <div className="relative h-64 overflow-hidden">
                 <Image
@@ -99,7 +100,23 @@ export default async function FeaturedExpeditions() {
 
                 <Link
                   href={`/expeditions/${trip.slug}`}
-                  className="mt-6 block w-full rounded-full bg-[#2F5D50] py-3 text-center font-semibold text-white transition hover:bg-[#3b7262]"
+                  className="
+  mt-6
+  block
+  w-full
+  rounded-full
+  bg-[#2F5D50]
+  py-3
+  text-center
+  font-semibold
+  text-white
+  transition-all
+  duration-200
+  hover:bg-[#3b7262]
+  active:scale-95
+  active:bg-[#23463B]
+  touch-manipulation
+"
                 >
                   View Expedition
                 </Link>

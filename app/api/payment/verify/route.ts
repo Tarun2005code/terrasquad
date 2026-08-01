@@ -1,7 +1,6 @@
-import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
+import { createHmac } from "crypto";
 export async function POST(req: NextRequest) {
   try {
     const {
@@ -26,8 +25,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const expectedSignature = crypto
-      .createHmac(
+    const expectedSignature = createHmac(
         "sha256",
         process.env.RAZORPAY_KEY_SECRET!
       )

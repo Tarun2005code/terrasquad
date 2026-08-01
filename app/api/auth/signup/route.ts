@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
-import { sendVerificationEmail } from "@/lib/email/sendVerificationEmail";
+import { sendOtpEmail } from "@/lib/email/sendOtpEmail";
 
 export async function POST(req: Request) {
   try {
@@ -26,14 +25,14 @@ export async function POST(req: Request) {
       );
     }
 
-    const existing =
+    const existingUser =
       await prisma.user.findUnique({
         where: {
           email: email.toLowerCase(),
         },
       });
 
-    if (existing) {
+    if (existingUser) {
       return NextResponse.json(
         {
           error:
@@ -48,8 +47,10 @@ export async function POST(req: Request) {
     const hashedPassword =
       await bcrypt.hash(password, 10);
 
-    const verificationToken =
-      crypto.randomBytes(32).toString("hex");
+    const otp =
+      Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
 
     const user =
       await prisma.user.create({
@@ -61,25 +62,26 @@ export async function POST(req: Request) {
 
           emailVerified: false,
 
-          verificationToken,
+          emailOtp: otp,
 
-          verificationTokenExpiry:
+          emailOtpExpiry:
             new Date(
               Date.now() +
-                24 * 60 * 60 * 1000
+                10 * 60 * 1000
             ),
         },
       });
 
-    await sendVerificationEmail(
+    await sendOtpEmail(
       user.email,
-      verificationToken
+      otp
     );
 
     return NextResponse.json({
       success: true,
+      email: user.email,
       message:
-        "Registration successful. Please check your email to verify your account.",
+        "OTP sent to your email.",
     });
   } catch (error) {
     console.error(error);

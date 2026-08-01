@@ -54,18 +54,22 @@ export default function SignupPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error);
+        toast.error(
+          data.error ||
+            "Signup failed"
+        );
         return;
       }
 
       toast.success(
-        "Account created successfully. Please check your email and verify your account before logging in."
+        "OTP sent to your email."
       );
 
-      setTimeout(() => {
-        router.push("/login");
-        router.refresh();
-      }, 2000);
+      router.push(
+        `/verify-otp?email=${encodeURIComponent(
+          email
+        )}`
+      );
     } catch {
       toast.error(
         "Signup failed"
@@ -86,8 +90,8 @@ export default function SignupPage() {
         </h1>
 
         <p className="mt-3 text-center text-sm text-gray-600">
-          After signup, you'll need to verify
-          your email before logging in.
+          A verification OTP will be
+          sent to your email address.
         </p>
 
         <input
@@ -98,6 +102,7 @@ export default function SignupPage() {
           onChange={(e) =>
             setName(e.target.value)
           }
+          required
         />
 
         <input
@@ -108,6 +113,7 @@ export default function SignupPage() {
           onChange={(e) =>
             setEmail(e.target.value)
           }
+          required
         />
 
         <input
@@ -135,6 +141,7 @@ export default function SignupPage() {
                 e.target.value
               )
             }
+            required
           />
 
           <button
@@ -157,16 +164,16 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-6 w-full rounded-2xl bg-[#2F5D50] py-4 text-white font-bold"
+          className="mt-6 w-full rounded-2xl bg-[#2F5D50] py-4 text-white font-bold disabled:opacity-50"
         >
           {loading
-            ? "Creating..."
+            ? "Sending OTP..."
             : "Create Account"}
         </button>
 
         <p className="mt-4 text-center text-xs text-gray-500">
-          Check your Inbox and Spam folder for
-          the verification email.
+          Check your Inbox and Spam
+          folder for the OTP email.
         </p>
       </form>
     </div>

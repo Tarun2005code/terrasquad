@@ -1,8 +1,7 @@
-import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendResetEmail } from "@/lib/email/sendResetEmail";
-
+import { randomBytes } from "crypto";
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
@@ -19,10 +18,7 @@ export async function POST(req: Request) {
         success: true,
       });
     }
-
-    const token = crypto
-      .randomBytes(32)
-      .toString("hex");
+const token = randomBytes(32).toString("hex");
 
     console.log("RESET TOKEN CREATED:", token);
 
