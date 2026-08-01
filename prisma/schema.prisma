@@ -124,8 +124,10 @@ model ExpeditionDate {
   date         DateTime
   seats        Int
   bookedSeats  Int        @default(0)
+  active       Boolean   @default(true)
   expeditionId Int
   featured     Boolean    @default(false)
+    
   Booking      Booking[]
   expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
 }

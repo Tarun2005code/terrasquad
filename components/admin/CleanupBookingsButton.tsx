@@ -14,8 +14,18 @@ export default function CleanupBookingsButton() {
       });
 
       const data = await res.json();
+console.log("STATUS:", res.status);
+console.log("DATA:", data);
+      if (!res.ok) {
+        throw new Error(data.error || "Cleanup failed");
+      }
 
-      alert(`${data.cancelled} expired bookings cleaned.`);
+      alert(`${data.deleted} bookings deleted.`);
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+      alert("Cleanup failed");
     } finally {
       setLoading(false);
     }

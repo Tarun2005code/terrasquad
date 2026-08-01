@@ -1,52 +1,51 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
-export async function POST() {
-    await requireAdmin();
-  try {
-    const now = new Date();
 
-    // Find all expired pending bookings
-    const expiredBookings = await prisma.booking.findMany({
+export async function POST() {
+  await requireAdmin();
+
+  try {
+    const bookings = await prisma.booking.findMany({
       where: {
-        paymentStatus: "PENDING",
-        expiresAt: {
-          lt: now,
+        paymentStatus: {
+          in: ["CANCELLED", "FAILED"],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const bookingIds = bookings.map((b) => b.id);
+
+    if (bookingIds.length === 0) {
+      return NextResponse.json({
+        success: true,
+        deleted: 0,
+      });
+    }
+
+    // Delete child records first
+    await prisma.bookingEvent.deleteMany({
+      where: {
+        bookingId: {
+          in: bookingIds,
         },
       },
     });
 
-    let cancelled = 0;
-
-    for (const booking of expiredBookings) {
-      await prisma.$transaction([
-        prisma.booking.update({
-          where: {
-            id: booking.id,
-          },
-          data: {
-            paymentStatus: "CANCELLED",
-          },
-        }),
-
-        prisma.expeditionDate.update({
-          where: {
-            id: booking.expeditionDateId,
-          },
-          data: {
-            bookedSeats: {
-              decrement: booking.participants,
-            },
-          },
-        }),
-      ]);
-
-      cancelled++;
-    }
+    const result = await prisma.booking.deleteMany({
+      where: {
+        id: {
+          in: bookingIds,
+        },
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      cancelled,
+      deleted: result.count,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +53,10 @@ export async function POST() {
     return NextResponse.json(
       {
         success: false,
-        error: "Cleanup failed",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Cleanup failed",
       },
       {
         status: 500,

@@ -5,18 +5,24 @@ import { useRouter } from "next/navigation";
 type Props = {
   expeditionId: number;
   dateId: number;
+  active: boolean;
 };
 
 export default function DeleteDepartureDateButton({
   expeditionId,
   dateId,
+  active,
 }: Props) {
   const router = useRouter();
 
-  async function remove() {
-    if (!confirm("Delete this departure date?")) {
-      return;
-    }
+  async function toggleStatus() {
+    const confirmed = confirm(
+      active
+        ? "Archive this departure date? It will no longer be available for booking."
+        : "Restore this departure date?"
+    );
+
+    if (!confirmed) return;
 
     const res = await fetch(
       `/api/admin/expeditions/${expeditionId}/dates/${dateId}`,
@@ -26,7 +32,14 @@ export default function DeleteDepartureDateButton({
     );
 
     if (!res.ok) {
-      alert("Unable to delete.");
+      const data = await res.json();
+
+      alert(
+        data.error ||
+          (active
+            ? "Unable to archive departure date."
+            : "Unable to restore departure date.")
+      );
       return;
     }
 
@@ -35,10 +48,14 @@ export default function DeleteDepartureDateButton({
 
   return (
     <button
-      onClick={remove}
-      className="rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+      onClick={toggleStatus}
+      className={`rounded px-3 py-1 text-white ${
+        active
+          ? "bg-orange-600 hover:bg-orange-700"
+          : "bg-green-600 hover:bg-green-700"
+      }`}
     >
-      Delete
+      {active ? "Archive" : "Restore"}
     </button>
   );
 }

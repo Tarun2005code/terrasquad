@@ -155,7 +155,10 @@ const archivedCount = expeditions.filter(
 
                   <div className="flex-1">
   {expedition.active ? (
-    <DeleteButton id={expedition.id} />
+    <DeleteButton
+  id={expedition.id}
+  active={expedition.active}
+/>
   ) : (
     <RestoreButton id={expedition.id} />
   )}
@@ -277,8 +280,9 @@ const archivedCount = expeditions.filter(
                         </Link>
 
                         <DeleteButton
-                          id={expedition.id}
-                        />
+  id={expedition.id}
+  active={expedition.active}
+/>
                       </div>
                     </td>
                   </tr>

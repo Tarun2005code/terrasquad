@@ -31,7 +31,6 @@ export async function PUT(req: Request, { params }: Props) {
       meals: body.meals || null,
       guide: body.guide,
       featured: body.featured,
-       active: false,
     },
   });
 
@@ -44,17 +43,33 @@ export async function DELETE(
 ) {
   const { id } = await params;
 
-  await prisma.expedition.update({
-  where: {
-    id: Number(id),
-  },
-  data: {
-    active: false,
-  },
-});
+  const expedition = await prisma.expedition.findUnique({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      active: true,
+    },
+  });
+
+  if (!expedition) {
+    return NextResponse.json(
+      { error: "Expedition not found" },
+      { status: 404 }
+    );
+  }
+
+  const updated = await prisma.expedition.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      active: !expedition.active,
+    },
+  });
 
   return NextResponse.json({
     success: true,
-    archived: true,
+    active: updated.active,
   });
 }

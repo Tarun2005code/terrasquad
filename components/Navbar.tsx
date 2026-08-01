@@ -32,68 +32,68 @@ export default async function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8 text-[15px] font-medium text-gray-300">
-          <Link
-            href="/"
-            className="transition hover:text-white"
-          >
-            Home
-          </Link>
+  {user?.role === "ADMIN" ? (
+    <>
+      <Link href="/admin" className="transition hover:text-white">
+        Dashboard
+      </Link>
 
-          <Link
-            href="/#expeditions"
-            className="transition hover:text-white"
-          >
-            Expeditions
-          </Link>
+      <Link
+        href="/admin/expeditions"
+        className="transition hover:text-white"
+      >
+        Manage Expeditions
+      </Link>
 
-          <Link
-            href="/#destinations"
-            className="transition hover:text-white"
-          >
-            Destinations
-          </Link>
+      <Link
+        href="/admin/bookings"
+        className="transition hover:text-white"
+      >
+        Bookings
+      </Link>
 
-          <Link
-            href="/#gallery"
-            className="transition hover:text-white"
-          >
-            Gallery
-          </Link>
+      <Link
+        href="/admin/check-in"
+        className="transition hover:text-white"
+      >
+        QR Check-In
+      </Link>
+    </>
+  ) : (
+    <>
+      <Link href="/" className="transition hover:text-white">
+        Home
+      </Link>
 
-          <Link
-            href="/#about"
-            className="transition hover:text-white"
-          >
-            About
-          </Link>
+      <Link href="/#expeditions" className="transition hover:text-white">
+        Expeditions
+      </Link>
 
-          <Link
-            href="/contact"
-            className="transition hover:text-white"
-          >
-            Contact
-          </Link>
+      <Link href="/#destinations" className="transition hover:text-white">
+        Destinations
+      </Link>
 
-          {user && (
-            <Link
-              href="/my-bookings"
-              className="transition hover:text-white"
-            >
-              My Bookings
-            </Link>
-          )}
+      <Link href="/#gallery" className="transition hover:text-white">
+        Gallery
+      </Link>
 
-          {user?.role === "ADMIN" && (
-            <Link
-              href="/admin/check-in"
-              className="transition hover:text-white"
-            >
-              QR Check-In
-            </Link>
-          )}
-        </div>
+      <Link href="/#about" className="transition hover:text-white">
+        About
+      </Link>
+
+      <Link href="/contact" className="transition hover:text-white">
+        Contact
+      </Link>
+
+      {user && (
+        <Link href="/my-bookings" className="transition hover:text-white">
+          My Bookings
+        </Link>
+      )}
+    </>
+  )}
+</div>
 
         {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-3">

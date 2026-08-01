@@ -7,29 +7,36 @@ export const revalidate = 600;
 export default async function UpcomingExpeditions() {
   const trips = await prisma.expeditionDate.findMany({
   where: {
+    date: {
+      gte: new Date(),
+    },
     expedition: {
       active: true,
     },
   },
-    select: {
-      id: true,
-      date: true,
-      seats: true,
-      bookedSeats: true,
-      expedition: {
-        select: {
-          title: true,
-          location: true,
-          price: true,
-          slug: true,
-        },
+
+  select: {
+    id: true,
+    date: true,
+    seats: true,
+    bookedSeats: true,
+    expedition: {
+      select: {
+        title: true,
+        location: true,
+        price: true,
+        slug: true,
+        active: true,
       },
     },
-    orderBy: {
-      date: "asc",
-    },
-    take: 3,
-  });
+  },
+
+  orderBy: {
+    date: "asc",
+  },
+
+  take: 3,
+});
 
   return (
     <section
