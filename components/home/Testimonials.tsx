@@ -1,13 +1,21 @@
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 600;
+
 export default async function Testimonials() {
   const testimonials = await prisma.review.findMany({
     where: {
       approved: true,
       rating: 5,
     },
-    include: {
-      user: true,
+    select: {
+      id: true,
+      comment: true,
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

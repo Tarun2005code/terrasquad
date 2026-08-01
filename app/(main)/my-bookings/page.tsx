@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import ReviewButton from "@/components/reviews/ReviewButton";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth/session";
-
+import Image from "next/image";
 import DownloadTicketButton from "@/components/admin/DownloadTicketButton";
 import RazorpayButton from "@/components/payment/RazorpayButton";
 import PaymentStatusBadge from "@/components/admin/PaymentStatusBadge";
@@ -122,11 +122,13 @@ export default async function MyBookingsPage() {
               >
                 {/* Hero Image */}
                 <div className="relative h-56 w-full">
-                  <img
-                    src={booking.expedition.image}
-                    alt={booking.expedition.title}
-                    className="h-full w-full object-cover"
-                  />
+                  <Image
+  src={booking.expedition.image}
+  alt={booking.expedition.title}
+  fill
+  sizes="100vw"
+  className="object-cover"
+/>
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 

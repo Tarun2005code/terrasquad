@@ -2,10 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 600;
+
 export default async function FeaturedExpeditions() {
   const expeditions = await prisma.expedition.findMany({
     where: {
       featured: true,
+    },
+    select: {
+      id: true,
+      title: true,
+      image: true,
+      location: true,
+      price: true,
+      duration: true,
+      slug: true,
     },
     take: 3,
   });
