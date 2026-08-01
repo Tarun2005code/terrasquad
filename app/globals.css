@@ -39,3 +39,7 @@ body{
 html{
   scroll-behavior:smooth;
 }
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+}

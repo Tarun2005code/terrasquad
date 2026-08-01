@@ -14,65 +14,68 @@ type Props = {
 };
 
 export default async function ExpeditionPage({ params }: Props) {
- 
-const { slug } = await params;
 
-console.log("Slug:", slug);
+  const { slug } = await params;
 
-const expedition = await prisma.expedition.findUnique({
-  where: { slug },
-  include: {
-    itinerary: {
-      orderBy: {
-        day: "asc",
+  console.log("Slug:", slug);
+
+  const expedition = await prisma.expedition.findUnique({
+    where: { slug },
+    include: {
+      itinerary: {
+        orderBy: {
+          day: "asc",
+        },
+      },
+      images: true,
+      dates: {
+        orderBy: {
+          date: "asc",
+        },
       },
     },
-    images: true,
-    dates: {
-      orderBy: {
-        date: "asc",
-      },
-    },
-  },
-});
+  });
 
-console.log("Expedition:", expedition);
+  console.log("Expedition:", expedition);
   if (!expedition) {
     notFound();
   }
 
   return (
-    <>
-      <Hero expedition={expedition} />
-      <Gallery
-  cover={expedition.image}
-  images={expedition.images}
-  title={expedition.title}
-/>
+  <>
+    <Hero expedition={expedition} />
 
-      <section className="bg-[#F8F7F3] py-20">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <Overview
-              description={expedition.description}
-            />
+    <section className="bg-[#F8F7F3] py-20">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-3">
+        <div className="order-2 lg:order-1 lg:col-span-2">
+          <Overview
+            description={expedition.description}
+          />
 
-            <Highlights
-              expedition={expedition}
-            />
+          <Highlights
+            expedition={expedition}
+          />
 
-            <Itinerary
-              itinerary={expedition.itinerary}
-            />
-          </div>
+          <Itinerary
+            itinerary={expedition.itinerary}
+          />
 
+          <Gallery
+            cover={expedition.image}
+            images={expedition.images}
+            title={expedition.title}
+          />
+        </div>
+
+        <div className="order-1 lg:order-2">
           <BookingCard
             expeditionId={expedition.id}
             price={expedition.price}
             dates={expedition.dates}
           />
         </div>
-      </section>
-    </>
-  );
+      </div>
+    </section>
+  </>
+);
 }

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 
 type HeroProps = {
@@ -14,9 +17,18 @@ type HeroProps = {
 };
 
 export default function Hero({ expedition }: HeroProps) {
+  const router = useRouter();
+
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/expeditions");
+    }
+  };
+
   return (
     <section className="relative h-[85vh] min-h-[650px] w-full overflow-hidden">
-
       <Image
         src={expedition.image}
         alt={expedition.title}
@@ -28,10 +40,31 @@ export default function Hero({ expedition }: HeroProps) {
       <div className="absolute inset-0 bg-black/50" />
 
       <div className="absolute inset-0 flex items-center">
-
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6">
-
           <div className="max-w-2xl text-white">
+            <button
+              onClick={handleBack}
+              className="
+                mb-8
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-white/20
+                bg-black/30
+                px-4
+                py-2
+                text-sm
+                font-medium
+                text-white
+                backdrop-blur-md
+                transition-all
+                hover:bg-black/50
+              "
+            >
+              ← Back
+            </button>
 
             <p className="mb-4 uppercase tracking-[6px] text-[#C89B3C]">
               TerraSquad Expedition
@@ -46,7 +79,6 @@ export default function Hero({ expedition }: HeroProps) {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-
               <div className="rounded-full bg-white/15 px-5 py-3 backdrop-blur">
                 ⭐ {expedition.rating}
               </div>
@@ -58,13 +90,10 @@ export default function Hero({ expedition }: HeroProps) {
               <div className="rounded-full bg-white/15 px-5 py-3 backdrop-blur">
                 🥾 {expedition.difficulty}
               </div>
-
             </div>
-
           </div>
 
           <div className="hidden rounded-3xl bg-white p-8 shadow-2xl lg:block">
-
             <p className="text-gray-500">
               Starting From
             </p>
@@ -80,13 +109,9 @@ export default function Hero({ expedition }: HeroProps) {
             <Button className="mt-8 w-full">
               Book Expedition
             </Button>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }

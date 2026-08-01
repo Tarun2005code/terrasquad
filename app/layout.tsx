@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-
+import { Inter, Poppins } from "next/font/google";
+import "./globals.css";
+import { Toaster } from "sonner";
+import Script from "next/script";
+import DisableRightClick from "@/components/DisableRightClick";
 export const metadata: Metadata = {
   metadataBase: new URL("https://terrasquad.in"),
 
@@ -26,10 +30,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-    },
   },
 
   openGraph: {
@@ -40,25 +40,43 @@ export const metadata: Metadata = {
     siteName: "TerraSquad",
     locale: "en_IN",
     type: "website",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "TerraSquad",
-      },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "TerraSquad",
-    description:
-      "Adventure expeditions, trekking and outdoor experiences across India.",
-    images: ["/og-image.jpg"],
   },
 
   alternates: {
     canonical: "https://terrasquad.in",
   },
 };
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${inter.variable} ${poppins.variable} h-full antialiased`}
+    >
+      <body className="min-h-full bg-black">
+          <DisableRightClick />
+        {children}
+
+        <Toaster richColors position="top-right" />
+
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+      </body>
+    </html>
+  );
+}
