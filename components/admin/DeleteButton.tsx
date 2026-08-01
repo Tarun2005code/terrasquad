@@ -2,11 +2,6 @@
 
 import { useRouter } from "next/navigation";
 
-type Props = {
-  params: Promise<{
-    id: string;
-  }>;
-};
 export default function DeleteButton({
   id,
 }: {
@@ -14,8 +9,10 @@ export default function DeleteButton({
 }) {
   const router = useRouter();
 
-  async function remove() {
-    const ok = confirm("Delete this expedition?");
+  async function archiveExpedition() {
+    const ok = confirm(
+      "Archive this expedition? It will be hidden from the website."
+    );
 
     if (!ok) return;
 
@@ -24,19 +21,20 @@ export default function DeleteButton({
     });
 
     if (!res.ok) {
-      alert("Failed to delete");
+      alert("Failed to archive");
       return;
     }
 
+    alert("Expedition archived successfully");
     router.refresh();
   }
 
   return (
     <button
-      onClick={remove}
-      className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+      onClick={archiveExpedition}
+      className="rounded-lg bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
     >
-      Delete
+      Archive
     </button>
   );
 }

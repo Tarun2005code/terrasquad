@@ -31,6 +31,7 @@ export async function PUT(req: Request, { params }: Props) {
       meals: body.meals || null,
       guide: body.guide,
       featured: body.featured,
+       active: false,
     },
   });
 

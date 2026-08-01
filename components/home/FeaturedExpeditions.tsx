@@ -18,6 +18,7 @@ export default async function FeaturedExpeditions() {
       price: true,
       duration: true,
       slug: true,
+      active: true,
     },
     take: 3,
   });

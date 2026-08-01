@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { prisma } from "@/lib/prisma";
 import DeleteButton from "@/components/admin/DeleteButton";
+import RestoreButton from "@/components/admin/RestoreButton";
 import { requireAdmin } from "@/lib/admin";
 
 export default async function AdminExpeditions() {
@@ -20,7 +21,13 @@ export default async function AdminExpeditions() {
       createdAt: "desc",
     },
   });
+const activeCount = expeditions.filter(
+  (e) => e.active
+).length;
 
+const archivedCount = expeditions.filter(
+  (e) => !e.active
+).length;
   return (
     <div className="mx-auto max-w-7xl p-4 md:p-8">
       {/* Header */}
@@ -52,8 +59,18 @@ export default async function AdminExpeditions() {
         </Link>
       </div>
 
-      {/* MOBILE CARDS */}
-      <div className="space-y-4 md:hidden">
+<div className="mb-6 flex gap-4">
+  <div className="rounded-lg bg-green-100 px-4 py-2 text-green-700">
+    Active: {activeCount}
+  </div>
+
+  <div className="rounded-lg bg-red-100 px-4 py-2 text-red-700">
+    Archived: {archivedCount}
+  </div>
+</div>
+
+{/* MOBILE CARDS */}
+<div className="space-y-4 md:hidden">
         {expeditions.length === 0 ? (
           <div className="rounded-xl border bg-white p-6 text-center text-gray-500 shadow">
             No expeditions found.
@@ -74,8 +91,22 @@ export default async function AdminExpeditions() {
 
               <div className="p-4">
                 <h2 className="text-xl font-bold">
-                  {expedition.title}
-                </h2>
+  {expedition.title}
+</h2>
+
+<div className="mt-2 flex gap-2">
+  {expedition.featured && (
+    <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+      Featured
+    </span>
+  )}
+
+  {!expedition.active && (
+    <span className="inline-block rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+      Archived
+    </span>
+  )}
+</div>
 
                 <div className="mt-3 space-y-2 text-sm">
                   <p>
@@ -123,8 +154,12 @@ export default async function AdminExpeditions() {
                   </Link>
 
                   <div className="flex-1">
-                    <DeleteButton id={expedition.id} />
-                  </div>
+  {expedition.active ? (
+    <DeleteButton id={expedition.id} />
+  ) : (
+    <RestoreButton id={expedition.id} />
+  )}
+</div>
                 </div>
               </div>
             </div>
@@ -210,19 +245,27 @@ export default async function AdminExpeditions() {
                     <td className="p-4">
                       {expedition._count.bookings}
                     </td>
+<td className="p-4">
+  <div className="flex flex-wrap gap-2">
+    {expedition.featured && (
+      <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+        Featured
+      </span>
+    )}
 
-                    <td className="p-4">
-                      {"featured" in expedition &&
-                      expedition.featured ? (
-                        <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-                          ⭐ Featured
-                        </span>
-                      ) : (
-                        <span className="text-gray-400">
-                          —
-                        </span>
-                      )}
-                    </td>
+    {!expedition.active && (
+      <span className="rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+        Archived
+      </span>
+    )}
+
+    {!expedition.featured && expedition.active && (
+      <span className="text-gray-400">
+        —
+      </span>
+    )}
+  </div>
+</td>
 
                     <td className="p-4">
                       <div className="flex gap-2">

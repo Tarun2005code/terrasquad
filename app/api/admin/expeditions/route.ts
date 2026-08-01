@@ -26,7 +26,13 @@ export async function GET() {
         createdAt: "desc",
       },
     });
+const activeCount = expeditions.filter(
+  (e) => e.active
+).length;
 
+const archivedCount = expeditions.filter(
+  (e) => !e.active
+).length;
     return NextResponse.json(expeditions);
   } catch (error) {
     console.error(error);

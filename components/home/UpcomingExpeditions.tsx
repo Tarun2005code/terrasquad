@@ -17,6 +17,7 @@ export default async function UpcomingExpeditions() {
           location: true,
           price: true,
           slug: true,
+          active: true,
         },
       },
     },

@@ -179,7 +179,7 @@ export default function ExpeditionForm({ expedition }: Props) {
     if (!expedition) return;
 
     const confirmDelete = confirm(
-      "Are you sure you want to delete this expedition?"
+      "Are you sure you want to archive this expedition?"
     );
 
     if (!confirmDelete) return;
@@ -192,7 +192,7 @@ export default function ExpeditionForm({ expedition }: Props) {
     );
 
     if (!res.ok) {
-      alert("Failed to delete expedition");
+      alert("Failed to Archive Expedition");
       return;
     }
 
@@ -321,7 +321,7 @@ export default function ExpeditionForm({ expedition }: Props) {
           onClick={deleteExpedition}
           className="ml-4 rounded-lg bg-red-600 px-8 py-3 text-white"
         >
-          Delete Expedition
+          Archive Expedition
         </button>
       )}
     </form>

@@ -3,12 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const expeditions = await prisma.expedition.findMany({
-    select: {
-      slug: true,
-      updatedAt: true,
-       active: true,
-    },
-  });
+  where: {
+    active: true,
+  },
+  select: {
+    slug: true,
+    updatedAt: true,
+  },
+});
 
   const expeditionUrls = expeditions.map((trip) => ({
     url: `https://terrasquad.in/expeditions/${trip.slug}`,
