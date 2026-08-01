@@ -116,11 +116,11 @@ export default function MobileMenu({
               </Link>
 
               <Link
-                href="/#featured-expeditions"
+                href="/#expeditions"
                 onClick={closeMenu}
                 className="rounded-2xl bg-[#111111] border border-white/10 px-5 py-4 text-white font-medium hover:bg-[#1a1a1a]"
               >
-                Featured Expeditions
+                Expeditions
               </Link>
 
               <Link

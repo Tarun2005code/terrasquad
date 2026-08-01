@@ -42,10 +42,10 @@ export default async function Navbar() {
           </Link>
 
           <Link
-            href="/#featured-expeditions"
+            href="/#expeditions"
             className="transition hover:text-white"
           >
-            Featured Expeditions
+            Expeditions
           </Link>
 
           <Link

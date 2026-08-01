@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import LoadingButton from "@/components/ui/LoadingButton";
 export default function ReviewButton({
   bookingId,
 }: {
@@ -50,12 +50,12 @@ export default function ReviewButton({
 
   return (
     <>
-      <button
+      <LoadingButton
         onClick={() => setOpen(true)}
         className="rounded-xl bg-[#2F5D50] px-5 py-3 text-white"
       >
         Write Review
-      </button>
+      </LoadingButton>
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
@@ -86,12 +86,12 @@ export default function ReviewButton({
             />
 
             <div className="mt-5 flex gap-3">
-              <button
+              <LoadingButton
                 onClick={() => setOpen(false)}
                 className="flex-1 rounded-xl border py-3"
               >
                 Cancel
-              </button>
+              </LoadingButton>
 
               <button
                 disabled={loading}
