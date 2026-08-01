@@ -94,13 +94,13 @@ export async function generateTicket(data: TicketData) {
   pdf.setFontSize(11);
 
   pdf.text(
-    "Phone: +91-XXXXXXXXXX",
+    "Phone: +91 9713024303",
     25,
     217
   );
 
   pdf.text(
-    "Email: support@terrasquad.in",
+    "Email: terrasquad.in@gmail.com",
     25,
     227
   );
