@@ -43,13 +43,17 @@ export async function DELETE(
 ) {
   const { id } = await params;
 
-  await prisma.expedition.delete({
-    where: {
-      id: Number(id),
-    },
-  });
+  await prisma.expedition.update({
+  where: {
+    id: Number(id),
+  },
+  data: {
+    active: false,
+  },
+});
 
   return NextResponse.json({
     success: true,
+    archived: true,
   });
 }

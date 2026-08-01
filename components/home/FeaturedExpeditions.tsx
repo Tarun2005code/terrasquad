@@ -8,6 +8,7 @@ export default async function FeaturedExpeditions() {
   const expeditions = await prisma.expedition.findMany({
     where: {
       featured: true,
+       active: true,
     },
     select: {
       id: true,

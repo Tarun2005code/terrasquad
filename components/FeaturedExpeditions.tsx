@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 
 export default async function FeaturedExpeditions() {
   const expeditions = await prisma.expedition.findMany({
+    where: {
+      active: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -11,11 +14,7 @@ export default async function FeaturedExpeditions() {
   return (
     <section className="bg-white pt-8 pb-28">
       <div className="mx-auto max-w-7xl px-6">
-
-        
-
         <div className="mt-20 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
           {expeditions.map((expedition) => (
             <ExpeditionCard
               key={expedition.id}
@@ -28,9 +27,7 @@ export default async function FeaturedExpeditions() {
               price={expedition.price}
             />
           ))}
-
         </div>
-
       </div>
     </section>
   );

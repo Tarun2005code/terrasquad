@@ -4,6 +4,9 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const expeditions = await prisma.expedition.findMany({
+  where: {
+    active: true,
+  },
       include: {
         itinerary: {
           orderBy: {
