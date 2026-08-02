@@ -4,39 +4,78 @@ import { prisma } from "@/lib/prisma";
 
 export const revalidate = 600;
 
-export default async function UpcomingExpeditions() {
-  const trips = await prisma.expeditionDate.findMany({
-  where: {
-    date: {
-      gte: new Date(),
-    },
-    expedition: {
-      active: true,
-    },
-  },
+type Trip = {
+  id: number;
+  date: Date;
+  seats: number;
+  bookedSeats: number;
+  expedition: {
+    title: string;
+    location: string;
+    price: number;
+    slug: string;
+    active: boolean;
+  };
+};
 
-  select: {
-    id: true,
-    date: true,
-    seats: true,
-    bookedSeats: true,
-    expedition: {
-      select: {
-        title: true,
-        location: true,
-        price: true,
-        slug: true,
+export default async function UpcomingExpeditions() {
+  const trips: Trip[] = await prisma.expeditionDate.findMany({
+    where: {
+      date: {
+        gte: new Date(),
+      },
+      expedition: {
         active: true,
       },
     },
-  },
 
-  orderBy: {
-    date: "asc",
-  },
+    select: {
+      id: true,
+      date: true,
+      seats: true,
+      bookedSeats: true,
+      expedition: {
+        select: {
+          title: true,
+          location: true,
+          price: true,
+          slug: true,
+          active: true,
+        },
+      },
+    },
 
-  take: 3,
-});
+    orderBy: {
+      date: "asc",
+    },
+
+    take: 6,
+  });
+
+  if (trips.length === 0) {
+    return (
+      <section
+        id="expeditions"
+        className="relative overflow-hidden py-28"
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-[#16221d] via-[#111111] to-[#0f1714]" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-6 text-center">
+          <p className="uppercase tracking-[8px] text-[#C89B3C] font-semibold">
+            Upcoming
+          </p>
+
+          <h2 className="mt-4 text-5xl md:text-6xl font-black text-white">
+            Next Expeditions
+          </h2>
+
+          <p className="mt-8 text-xl text-gray-300">
+            New expeditions will be announced soon.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -51,30 +90,30 @@ export default async function UpcomingExpeditions() {
 
       <div className="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[#2F5D50]/20 blur-[120px]" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="text-center">
-          <p className="uppercase tracking-[8px] text-[#C89B3C] font-semibold">
+          <p className="font-semibold uppercase tracking-[8px] text-[#C89B3C]">
             Upcoming
           </p>
 
-          <h2 className="mt-4 text-5xl md:text-6xl font-black text-white">
+          <h2 className="mt-4 text-5xl font-black text-white md:text-6xl">
             Next Expeditions
           </h2>
 
-          <p className="mt-5 text-gray-300 max-w-2xl mx-auto">
+          <p className="mx-auto mt-5 max-w-2xl text-gray-300">
             Reserve your spot before seats fill up and join fellow explorers on
             unforgettable adventures.
           </p>
         </div>
 
         <div className="mt-20 space-y-8">
-          {trips.map((trip) => {
+          {trips.map((trip: Trip) => {
             const seatsLeft = trip.seats - trip.bookedSeats;
 
             return (
               <div
                 key={trip.id}
-                className="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md p-8 transition-all duration-500 hover:border-[#C89B3C]/40 hover:bg-white/10 hover:-translate-y-1"
+                className="group rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-md transition-all duration-500 hover:-translate-y-1 hover:border-[#C89B3C]/40 hover:bg-white/10"
               >
                 <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
                   {/* Left */}
@@ -98,8 +137,18 @@ export default async function UpcomingExpeditions() {
                       📍 {trip.expedition.location}
                     </p>
 
-                    <p className="mt-3 text-sm font-medium text-green-400">
-                      {seatsLeft} Seats Left
+                    <p
+                      className={`mt-3 text-sm font-medium ${
+                        seatsLeft > 5
+                          ? "text-green-400"
+                          : seatsLeft > 0
+                          ? "text-yellow-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {seatsLeft > 0
+                        ? `${seatsLeft} Seats Left`
+                        : "Sold Out"}
                     </p>
                   </div>
 
@@ -119,13 +168,23 @@ export default async function UpcomingExpeditions() {
                     href={`/expeditions/${trip.expedition.slug}`}
                   >
                     <Button>
-                      Reserve Seat
+                      {seatsLeft > 0
+                        ? "Reserve Seat"
+                        : "View Expedition"}
                     </Button>
                   </Link>
                 </div>
               </div>
             );
           })}
+        </div>
+
+        <div className="mt-14 text-center">
+          <Link href="/expeditions">
+            <Button>
+              View All Expeditions
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

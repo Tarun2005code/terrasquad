@@ -4,16 +4,20 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import Script from "next/script";
 import DisableRightClick from "@/components/DisableRightClick";
+import AuthProvider from "@/components/providers/AuthProvider";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://terrasquad.in"),
-icons: {
+
+  icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
     apple: "/icon.png",
   },
 
   title: {
-    default: "TerraSquad | Adventure Expeditions & Trekking in India",
+    default:
+      "TerraSquad | Adventure Expeditions & Trekking in India",
     template: "%s | TerraSquad",
   },
 
@@ -38,7 +42,8 @@ icons: {
   },
 
   openGraph: {
-    title: "TerraSquad | Adventure Expeditions & Trekking in India",
+    title:
+      "TerraSquad | Adventure Expeditions & Trekking in India",
     description:
       "Join TerraSquad for unforgettable trekking, camping and adventure expeditions across India.",
     url: "https://terrasquad.in",
@@ -75,10 +80,16 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-black">
+        <AuthProvider>
           <DisableRightClick />
-        {children}
 
-        <Toaster richColors position="top-right" />
+          {children}
+
+          <Toaster
+            richColors
+            position="top-right"
+          />
+        </AuthProvider>
 
         <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>

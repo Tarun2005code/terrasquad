@@ -34,7 +34,7 @@ export default function GalleryUploader({
           .NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
       );
 
-      const upload = await fetch(
+      const uploadRes = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
         {
           method: "POST",
@@ -42,7 +42,28 @@ export default function GalleryUploader({
         }
       );
 
-      const uploaded = await upload.json();
+      const uploaded = await uploadRes.json();
+
+      console.log("UPLOADED:", uploaded);
+
+      if (!uploaded.secure_url) {
+        console.error(
+          "Cloudinary upload failed:",
+          uploaded
+        );
+
+        alert("Cloudinary upload failed.");
+        return;
+      }
+
+      const payload = {
+        image: uploaded.secure_url,
+      };
+
+      console.log(
+        "PAYLOAD TO API:",
+        payload
+      );
 
       const save = await fetch(
         `/api/admin/expeditions/${expeditionId}/gallery`,
@@ -52,20 +73,30 @@ export default function GalleryUploader({
             "Content-Type":
               "application/json",
           },
-          body: JSON.stringify({
-            image: uploaded.secure_url,
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
+      const saveData = await save.json();
+
+      console.log(
+        "GALLERY SAVE RESPONSE:",
+        saveData
+      );
+
       if (!save.ok) {
-        alert("Unable to save image.");
+        alert(
+          saveData.error ||
+            "Unable to save image."
+        );
         return;
       }
 
+      alert("Image uploaded successfully.");
+
       router.refresh();
     } catch (err) {
-      console.error(err);
+      console.error("UPLOAD ERROR:", err);
       alert("Upload failed.");
     } finally {
       setLoading(false);
@@ -74,7 +105,9 @@ export default function GalleryUploader({
 
   return (
     <label className="cursor-pointer rounded-lg bg-green-600 px-6 py-3 text-white hover:bg-green-700">
-      {loading ? "Uploading..." : "Upload Image"}
+      {loading
+        ? "Uploading..."
+        : "Upload Image"}
 
       <input
         hidden

@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -172,9 +172,21 @@ export default function SignupPage() {
         </button>
 
         <p className="mt-4 text-center text-xs text-gray-500">
-          Check your Inbox and Spam
-          folder for the OTP email.
-        </p>
+  Check your Inbox and Spam folder for the OTP.
+</p>
+
+<div className="mt-6 text-center">
+  <span className="text-sm text-gray-600">
+    Already have an account?{" "}
+  </span>
+
+  <Link
+    href="/login"
+    className="font-semibold text-[#2F5D50] hover:underline"
+  >
+    Login
+  </Link>
+</div>
       </form>
     </div>
   );

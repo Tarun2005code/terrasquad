@@ -33,7 +33,8 @@ export async function POST(
     const { id } = await params;
 
     const body = await req.json();
-
+console.log("EXPEDITION ID:", id);
+    console.log("BODY:", body);
     const image = await prisma.expeditionImage.create({
       data: {
         expeditionId: Number(id),
@@ -41,13 +42,16 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(image);
+      return NextResponse.json(image);
   } catch (err) {
-    console.error(err);
+    console.error("GALLERY ERROR:", err);
 
     return NextResponse.json(
       {
-        error: "Failed to upload image",
+        error:
+          err instanceof Error
+            ? err.message
+            : "Failed to upload image",
       },
       {
         status: 500,

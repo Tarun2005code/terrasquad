@@ -4,24 +4,36 @@ import { prisma } from "@/lib/prisma";
 
 export const revalidate = 600;
 
+type FeaturedTrip = {
+  id: number;
+  title: string;
+  image: string;
+  location: string;
+  price: number;
+  duration: string;
+  slug: string;
+  active: boolean;
+};
+
 export default async function FeaturedExpeditions() {
-  const expeditions = await prisma.expedition.findMany({
-    where: {
-      featured: true,
-       active: true,
-    },
-    select: {
-      id: true,
-      title: true,
-      image: true,
-      location: true,
-      price: true,
-      duration: true,
-      slug: true,
-      active: true,
-    },
-    take: 3,
-  });
+  const expeditions: FeaturedTrip[] =
+    await prisma.expedition.findMany({
+      where: {
+        featured: true,
+        active: true,
+      },
+      select: {
+        id: true,
+        title: true,
+        image: true,
+        location: true,
+        price: true,
+        duration: true,
+        slug: true,
+        active: true,
+      },
+      take: 3,
+    });
 
   if (expeditions.length === 0) {
     return null;
@@ -40,28 +52,27 @@ export default async function FeaturedExpeditions() {
       <div className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-[#2F5D50]/20 blur-[140px]" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <p className="uppercase tracking-[8px] text-[#C89B3C] font-semibold">
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <div className="mb-16 text-center">
+          <p className="font-semibold uppercase tracking-[8px] text-[#C89B3C]">
             Featured Adventures
           </p>
 
-          <h2 className="mt-5 text-5xl md:text-6xl font-black text-white">
+          <h2 className="mt-5 text-5xl font-black text-white md:text-6xl">
             Upcoming Expeditions
           </h2>
 
-          <p className="mt-6 max-w-2xl mx-auto text-gray-300 leading-8">
+          <p className="mx-auto mt-6 max-w-2xl leading-8 text-gray-300">
             Handpicked experiences curated for explorers seeking
             unforgettable adventures.
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {expeditions.map((trip) => (
+          {expeditions.map((trip: FeaturedTrip) => (
             <div
               key={trip.id}
-              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:-translate-y-2
-active:scale-[0.98]hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
+              className="group overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)] active:scale-[0.98]"
             >
               <div className="relative h-64 overflow-hidden">
                 <Image
@@ -74,7 +85,7 @@ active:scale-[0.98]hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-                <div className="absolute top-4 left-4">
+                <div className="absolute left-4 top-4">
                   <span className="rounded-full bg-[#C89B3C] px-4 py-1 text-sm font-semibold text-white shadow-lg">
                     Featured
                   </span>
@@ -102,23 +113,7 @@ active:scale-[0.98]hover:-translate-y-2 hover:border-[#C89B3C]/40 hover:shadow-[
 
                 <Link
                   href={`/expeditions/${trip.slug}`}
-                  className="
-  mt-6
-  block
-  w-full
-  rounded-full
-  bg-[#2F5D50]
-  py-3
-  text-center
-  font-semibold
-  text-white
-  transition-all
-  duration-200
-  hover:bg-[#3b7262]
-  active:scale-95
-  active:bg-[#23463B]
-  touch-manipulation
-"
+                  className="mt-6 block w-full rounded-full bg-[#2F5D50] py-3 text-center font-semibold text-white transition-all duration-200 hover:bg-[#3b7262] active:scale-95 active:bg-[#23463B] touch-manipulation"
                 >
                   View Expedition
                 </Link>
