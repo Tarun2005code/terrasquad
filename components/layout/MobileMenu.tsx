@@ -181,7 +181,6 @@ export default function MobileMenu({
 
                 <div
                   className="flex-1"
-                  onClick={closeMenu}
                 >
                   <LogoutButton />
                 </div>

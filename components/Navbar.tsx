@@ -4,10 +4,10 @@ import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth/session";
 import LogoutButton from "@/components/auth/LogoutButton";
 import MobileMenu from "@/components/layout/MobileMenu";
-
+import { unstable_noStore as noStore } from "next/cache";
 export default async function Navbar() {
+  noStore();
   const user = await getCurrentUser();
-
   return (
     <nav className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-black/90 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">

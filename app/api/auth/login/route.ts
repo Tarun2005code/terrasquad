@@ -80,29 +80,19 @@ export async function POST(req: Request) {
     const cookieStore =
       await cookies();
 
-    cookieStore.set(
-      "__Secure-user_token",
-      token,
-      {
-        httpOnly: true,
-        secure:
-          process.env.NODE_ENV ===
-          "production",
-        sameSite: "strict",
-        path: "/",
-        maxAge:
-          60 * 60 * 24 * 30,
-        expires: new Date(
-          Date.now() +
-            1000 *
-              60 *
-              60 *
-              24 *
-              30
-        ),
-        priority: "high",
-      }
-    );
+    const cookieName =
+  process.env.NODE_ENV === "production"
+    ? "__Secure-user_token"
+    : "user_token";
+
+cookieStore.set(cookieName, token, {
+  httpOnly: true,
+  secure:
+    process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  path: "/",
+  maxAge: 60 * 60 * 24 * 30,
+});
 
     return NextResponse.json({
       success: true,

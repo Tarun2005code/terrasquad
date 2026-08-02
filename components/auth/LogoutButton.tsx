@@ -2,87 +2,74 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export default function LogoutButton() {
   const router = useRouter();
 
-  const [showConfirm, setShowConfirm] =
+  const [loading, setLoading] =
     useState(false);
 
+  const [message, setMessage] =
+    useState("");
+
   async function logout() {
+    if (loading) return;
+
     try {
+      setLoading(true);
+      setMessage("");
+
       const res = await fetch(
         "/api/auth/logout",
         {
           method: "POST",
+          credentials: "include",
         }
       );
 
       if (!res.ok) {
-        toast.error(
-          "Failed to logout"
+        throw new Error(
+          "Logout failed"
         );
-        return;
       }
 
-      toast.success(
+      setMessage(
         "Logged out successfully"
       );
 
       setTimeout(() => {
-        router.push("/");
+        router.replace("/");
         router.refresh();
-      }, 800);
-    } catch {
-      toast.error(
-        "Something went wrong"
+      }, 1000);
+    } catch (error) {
+      console.error(error);
+
+      setMessage(
+        "Logout failed"
       );
+
+      setLoading(false);
     }
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center gap-2">
       <button
-        onClick={() =>
-          setShowConfirm(true)
-        }
-        className="rounded-xl border border-red-500 px-6 py-3 text-red-600 transition hover:bg-red-50"
+        type="button"
+        onClick={logout}
+        disabled={loading}
+        className="rounded-xl border border-red-500 px-6 py-3 text-red-600 hover:bg-red-50 disabled:opacity-50"
       >
-        Logout
+        {loading
+          ? "Logging out..."
+          : "Logout"}
       </button>
 
-      {showConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
-            <h3 className="mb-2 text-lg font-semibold text-black">
-              Confirm Logout
-            </h3>
-
-            <p className="mb-6 text-sm text-gray-600">
-              Are you sure you want to logout from your account?
-            </p>
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() =>
-                  setShowConfirm(false)
-                }
-                className="rounded-lg border px-4 py-2 text-sm"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={logout}
-                className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-              >
-                Yes, Logout
-              </button>
-            </div>
-          </div>
+      {message && (
+        <div className="rounded-md bg-green-100 px-3 py-1 text-xs text-green-700">
+          {message}
         </div>
       )}
-    </>
+    </div>
   );
 }
