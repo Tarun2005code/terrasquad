@@ -109,19 +109,19 @@ export async function POST(req: Request) {
       message:
         "Login successful",
     });
-  } catch (error) {
-    console.error(
-      "Login Error:",
-      error
-    );
+  }catch (error) {
+  console.error("Login Error FULL:", error);
 
-    return NextResponse.json(
-      {
-        error: "Server error",
-      },
-      {
-        status: 500,
-      }
-    );
-  }
+  return NextResponse.json(
+    {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Server error",
+    },
+    {
+      status: 500,
+    }
+  );
+}
 }
