@@ -46,6 +46,7 @@ model User {
   role             UserRole      @default(USER)
   resetToken       String?
   resetTokenExpiry DateTime?
+  tokenVersion Int @default(0)
   emailVerified    Boolean       @default(false)
   emailOtp         String?
   emailOtpExpiry   DateTime?
@@ -54,6 +55,8 @@ model User {
   bookings         Booking[]
   couponUsage      CouponUsage[]
   reviews          Review[]
+  otpAttempts Int @default(0)
+otpLockedUntil DateTime?
 }
 
 model ContactMessage {

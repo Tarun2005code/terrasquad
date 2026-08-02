@@ -10,7 +10,10 @@ export async function POST(req: Request) {
 
     const { email, password } = body;
 
-    if (!email || !password) {
+    const emailNormalized =
+      email?.trim().toLowerCase();
+
+    if (!emailNormalized || !password) {
       return NextResponse.json(
         {
           error: "Email and password are required",
@@ -24,7 +27,7 @@ export async function POST(req: Request) {
     const user =
       await prisma.user.findUnique({
         where: {
-          email: email.toLowerCase(),
+          email: emailNormalized,
         },
       });
 
@@ -56,7 +59,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Email verification required
     if (!user.emailVerified) {
       return NextResponse.json(
         {
@@ -72,23 +74,33 @@ export async function POST(req: Request) {
     const token = signUserToken({
       id: user.id,
       email: user.email,
+      role: user.role,
     });
 
     const cookieStore =
       await cookies();
 
     cookieStore.set(
-      "user_token",
+      "__Secure-user_token",
       token,
       {
         httpOnly: true,
         secure:
           process.env.NODE_ENV ===
           "production",
-        sameSite: "lax",
+        sameSite: "strict",
         path: "/",
         maxAge:
           60 * 60 * 24 * 30,
+        expires: new Date(
+          Date.now() +
+            1000 *
+              60 *
+              60 *
+              24 *
+              30
+        ),
+        priority: "high",
       }
     );
 

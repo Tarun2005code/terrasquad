@@ -6,7 +6,7 @@ export async function POST() {
     await cookies();
 
   cookieStore.delete(
-    "user_token"
+    "__Secure-user_token"
   );
 
   return NextResponse.json({

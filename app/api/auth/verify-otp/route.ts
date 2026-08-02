@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { email, otp } =
-      await req.json();
+    const body = await req.json();
+
+    const email =
+      body.email?.trim().toLowerCase();
+
+    const otp =
+      body.otp?.trim();
 
     if (!email || !otp) {
       return NextResponse.json(
@@ -18,11 +24,22 @@ export async function POST(req: Request) {
       );
     }
 
+    // OTP must be exactly 6 digits
+    if (!/^\d{6}$/.test(otp)) {
+      return NextResponse.json(
+        {
+          error: "Invalid OTP",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     const user =
       await prisma.user.findUnique({
         where: {
-          email:
-            email.toLowerCase(),
+          email,
         },
       });
 
@@ -30,22 +47,30 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error:
-            "User not found",
+            "Invalid email or OTP",
         },
         {
-          status: 404,
+          status: 400,
         }
       );
     }
 
+    if (user.emailVerified) {
+      return NextResponse.json({
+        success: true,
+        message:
+          "Email already verified",
+      });
+    }
+
     if (
       !user.emailOtp ||
-      user.emailOtp !== otp
+      !user.emailOtpExpiry
     ) {
       return NextResponse.json(
         {
           error:
-            "Invalid OTP",
+            "Invalid email or OTP",
         },
         {
           status: 400,
@@ -54,9 +79,8 @@ export async function POST(req: Request) {
     }
 
     if (
-      !user.emailOtpExpiry ||
       user.emailOtpExpiry <
-        new Date()
+      new Date()
     ) {
       return NextResponse.json(
         {
@@ -69,16 +93,33 @@ export async function POST(req: Request) {
       );
     }
 
+    const validOtp =
+      await bcrypt.compare(
+        otp,
+        user.emailOtp
+      );
+
+    if (!validOtp) {
+      return NextResponse.json(
+        {
+          error:
+            "Invalid email or OTP",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
-  emailVerified: true,
-
-  emailOtp: null,
-  emailOtpExpiry: null,
-}
+        emailVerified: true,
+        emailOtp: null,
+        emailOtpExpiry: null,
+      },
     });
 
     return NextResponse.json({
@@ -87,7 +128,10 @@ export async function POST(req: Request) {
         "Email verified successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Verify OTP Error:",
+      error
+    );
 
     return NextResponse.json(
       {

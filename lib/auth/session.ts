@@ -5,7 +5,8 @@ import { verifyUserToken } from "./auth";
 export async function getCurrentUser() {
   const cookieStore = await cookies();
 
-  const token = cookieStore.get("user_token")?.value;
+  const token =
+  cookieStore.get("__Secure-user_token")?.value;
 
   if (!token) {
     return null;
