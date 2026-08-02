@@ -10,7 +10,7 @@ datasource db {
 
 model Expedition {
   id          Int               @id @default(autoincrement())
-  active      Boolean  @default(true)
+  active      Boolean           @default(true)
   slug        String            @unique
   title       String
   location    String
@@ -46,7 +46,7 @@ model User {
   role             UserRole      @default(USER)
   resetToken       String?
   resetTokenExpiry DateTime?
-  tokenVersion Int @default(0)
+  tokenVersion     Int           @default(0)
   emailVerified    Boolean       @default(false)
   emailOtp         String?
   emailOtpExpiry   DateTime?
@@ -55,8 +55,8 @@ model User {
   bookings         Booking[]
   couponUsage      CouponUsage[]
   reviews          Review[]
-  otpAttempts Int @default(0)
-otpLockedUntil DateTime?
+  otpAttempts      Int           @default(0)
+  otpLockedUntil   DateTime?
 }
 
 model ContactMessage {
@@ -123,16 +123,16 @@ model ExpeditionImage {
 }
 
 model ExpeditionDate {
-  id           Int        @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   date         DateTime
   seats        Int
-  bookedSeats  Int        @default(0)
-  active       Boolean   @default(true)
+  bookedSeats  Int      @default(0)
+  active       Boolean  @default(true)
   expeditionId Int
-  featured     Boolean    @default(false)
-    
-  Booking      Booking[]
-  expedition   Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
+  featured     Boolean  @default(false)
+
+  Booking    Booking[]
+  expedition Expedition @relation(fields: [expeditionId], references: [id], onDelete: Cascade)
 }
 
 model Review {
