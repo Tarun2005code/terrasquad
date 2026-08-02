@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://terrasquad.in"),
 
   icons: {
-    icon: "/icon.png",
-    shortcut: "/icon.png",
-    apple: "/icon.png",
+    icon: "/fevicon.ico",
+    shortcut: "/fevicon.ico",
+    apple: "/apple-icon.png",
   },
 
   title: {
