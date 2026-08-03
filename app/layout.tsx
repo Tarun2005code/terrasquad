@@ -37,9 +37,12 @@ export const metadata: Metadata = {
   ],
 
   robots: {
-    index: true,
-    follow: true,
+  index: true,
+  follow: true,
+  googleBot: {
+    "max-image-preview": "none",
   },
+},
 
   openGraph: {
     title:
