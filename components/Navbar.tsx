@@ -78,7 +78,7 @@ export default async function Navbar() {
         Gallery
       </Link>
 
-      <Link href="/#about" className="transition hover:text-white">
+      <Link href="/about" className="transition hover:text-white">
         About
       </Link>
 
